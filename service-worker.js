@@ -1,4 +1,4 @@
-const CACHE_NAME = 'newtea-photo-cache-v1';
+const CACHE_NAME = 'Oppics';
 
 // Liste des fichiers essentiels pour le mode hors-ligne
 const urlsToCache = [
