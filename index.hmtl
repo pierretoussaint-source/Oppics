@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="icon" href="data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.plant-stem-icon { stroke: var(--theme-secondary-color, %234CAF50); stroke-width: 1.5; stroke-linecap: round; }.plant-leaf-icon { fill: var(--theme-secondary-color, %2366BB6A); }.n-stylized-icon { fill: var(--theme-heading-color, %23227A49); }.icon-background { fill: var(--theme-card-background-color, white); stroke: var(--theme-secondary-color, %23DDD); stroke-width:1; }%3C/style%3E%3Ccircle class='icon-background' cx='40' cy='40' r='38'/%3E%3Cpath d='M30 55 L30 25 M30 25 L50 55 M50 55 L50 25' stroke='var(--theme-heading-color, %23227A49)' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cg transform='translate(40, 15) scale(0.45)'%3E%3Cline class='plant-stem-icon' x1='0' y1='10' x2='0' y2='-3'/%3E%3Cellipse cx='0' cy='-8' rx='5' ry='7' fill='var(--theme-sorgho-primary-color, %23C0392B)'/%3E%3C/g%3E%3Cg transform='translate(18, 38) scale(0.45)'%3E%3Cline class='plant-stem-icon' x1='0' y1='12' x2='0' y2='-3'/%3E%3Ccircle cx='0' cy='-8' r='5' fill='var(--theme-primary-color, %23FFD700)'/%3E%3Ccircle cx='0' cy='-8' r='2' fill='var(--theme-secondary-color, %23A0522D)'/%3E%3C/g%3E%3Cg transform='translate(62, 38) scale(0.45)'%3E%3Crect class='plant-leaf-icon' x='-2' y='-10' width='4' height='18' rx='1'/%3E%3Cpath stroke='var(--theme-primary-color, %23E6B800)' stroke-width='1.5' fill='none' d='M-1.5,-10 Q0,-14 1.5,-10 M0,-10 Q-2.5,-13 -3,-9 M0,-10 Q2.5,-13 3,-9'/%3E%3C/g%3E%3Cg transform='translate(25, 60) scale(0.4)'%3E%3Cline class='plant-stem-icon' x1='0' y1='10' x2='0' y2='-1'/%3E%3Ccircle cx='0' cy='-3' r='2' fill='var(--theme-colza-primary-color, %23FFEB3B)'/%3E%3Ccircle cx='-3' cy='-5' r='2' fill='var(--theme-colza-primary-color, %23FFEB3B)'/%3E%3Ccircle cx='3' cy='-5' r='2' fill='var(--theme-colza-primary-color, %23FFEB3B)'/%3E%3C/g%3E%3Cg transform='translate(55, 60) scale(0.4)'%3E%3Cpath class='plant-leaf-icon' d='M0,12 Q-8,3 -4,-4 Q0,-8 4,-4 Q8,3 0,12 Z'/%3E%3Ccircle cx='-2' cy='-1' r='1' fill='var(--theme-soja-primary-color, %23E1BEE7)'/%3E%3Ccircle cx='2' cy='-1' r='1' fill='var(--theme-soja-primary-color, %23E1BEE7)'/%3E%3C/g%3E%3C/svg%3E">
+    <title>Newtea Photo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#227A49">
+    <style>
+        /* Remplacement du zoom par une taille de police racine réduite pour iOS */
+        html { font-size: 13px; overflow-x: hidden; }
+        body { overflow-x: hidden; font-family: var(--theme-font-family); margin: 0; padding: 15px; background-color: var(--theme-background-color); color: var(--theme-text-color); transition: background-color 0.5s ease, color 0.5s ease; }
+        
+        :root {
+            --theme-primary-color: #33A532; --theme-secondary-color: #227A49; 
+            --theme-text-on-primary: white; --theme-text-on-secondary: white;
+            --theme-heading-color: #227A49; --theme-button-hover-bg: #227A49;
+            --theme-tab-active-bg: #33A532; --theme-tab-active-text: white;
+            --theme-gps-button-bg: #007bff; --theme-gps-button-text: white;
+            --theme-input-border-color: #ced4da;
+            --theme-text-color: #495057; --theme-background-color: #f8f9fa;
+            --theme-card-background-color: #ffffff; --theme-card-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            --theme-font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        /* DARK MODE VARIABLES */
+        body.dark-mode {
+            --theme-primary-color: #44b543; --theme-secondary-color: #2b9159; 
+            --theme-heading-color: #44b543; --theme-button-hover-bg: #2b9159;
+            --theme-text-color: #e0e0e0; --theme-background-color: #121212;
+            --theme-card-background-color: #1e1e1e; --theme-card-shadow: 0 3px 8px rgba(0,0,0,0.4);
+            --theme-input-border-color: #444; 
+        }
+        body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background-color: #2c2c2c; color: #fff; border-color: #555; }
+        body.dark-mode .setup-section { background: #2c2c2c; border-color:#444; }
+        body.dark-mode .tablink { background-color: #333; color: #aaa; }
+        body.dark-mode .tablink.active { background-color: var(--theme-tab-active-bg); color: var(--theme-tab-active-text); }
+        body.dark-mode .square-btn { background-color: #2c2c2c; border-color: #555; color:#ddd; }
+        body.dark-mode .square-btn.selected { background-color: var(--theme-secondary-color); color:white; }
+        body.dark-mode th { background-color: #333; color:#fff;}
+        body.dark-mode td { border-color: #444; }
+        body.dark-mode #recap-table thead tr { background-color: #333 !important; color:#fff;}
+        body.dark-mode .modal-content { background-color: #1e1e1e; color: #e0e0e0; }
+        body.dark-mode .interactive-controls { background-color: #2c3e2c; border-color: #3d5a3d;}
+        body.dark-mode .interactive-val { background: rgba(0,0,0,0.6); color: #fff; border-color:#555;}
+        body.dark-mode .sticky-x, body.dark-mode .sticky-y, body.dark-mode .sticky-corner { background-color: #333 !important; color:#fff;}
+        body.dark-mode .notation-group-container { background-color: #242424; border-color:#444;}
+
+        .theme-mais { --theme-primary-color: #f1c40f; --theme-secondary-color: #27ae60; --theme-text-on-primary: #333; --theme-heading-color: #27ae60; --theme-button-hover-bg: #e6b800; --theme-tab-active-bg: #f1c40f; --theme-tab-active-text: #333; --theme-gps-button-bg: #27ae60; }
+        .theme-tournesol { --theme-primary-color: #e67e22; --theme-secondary-color: #2c3e50; --theme-text-on-primary: white; --theme-heading-color: #e67e22; --theme-button-hover-bg: #d35400; --theme-tab-active-bg: #e67e22; --theme-tab-active-text: white; --theme-gps-button-bg: #2c3e50; }
+        .theme-colza { --theme-primary-color: #f4d03f; --theme-secondary-color: #2ecc71; --theme-text-on-primary: #333; --theme-heading-color: #27ae60; --theme-button-hover-bg: #e1be32; --theme-tab-active-bg: #f4d03f; --theme-tab-active-text: #333; --theme-gps-button-bg: #2ecc71; }
+        .theme-soja { --theme-primary-color: #a2d9ce; --theme-secondary-color: #50623a; --theme-text-on-primary: #333; --theme-heading-color: #50623a; --theme-button-hover-bg: #8bc0b3; --theme-tab-active-bg: #a2d9ce; --theme-tab-active-text: #333; --theme-gps-button-bg: #50623a; }
+        .theme-sorgho { --theme-primary-color: #c0392b; --theme-secondary-color: #795548; --theme-text-on-primary: white; --theme-heading-color: #c0392b; --theme-button-hover-bg: #a93226; --theme-tab-active-bg: #c0392b; --theme-tab-active-text: white; --theme-gps-button-bg: #795548; }
+        
+        h1, h2, h3, h4 { color: var(--theme-heading-color); margin-top: 0; }
+        
+        .tabs { overflow: hidden; border-bottom: 1px solid #ddd; margin-bottom: 20px; }
+        .tablink { background-color: #e9ecef; float: left; border: none; outline: none; cursor: pointer; padding: 12px 18px; transition: background-color 0.3s, color 0.3s; font-size: 1em; border-radius: 6px 6px 0 0; margin-right: 3px; color: #495057; }
+        .tablink.active { background-color: var(--theme-tab-active-bg); color: var(--theme-tab-active-text); font-weight: 500; }
+        .tabcontent { display: none; padding: 15px 0; }
+        
+        #session-setup, .sidebar, .main-panel, #Configuration div { padding: 20px; background-color: var(--theme-card-background-color); border-radius: 10px; box-shadow: var(--theme-card-shadow); margin-bottom:25px; }
+        #app-container { max-width: 1400px; margin: 0 auto; }
+        #app-content { display: flex; flex-wrap: wrap; gap: 25px; }
+        
+        .sidebar { flex: 1.3; min-width: 480px; box-sizing: border-box; } 
+        .main-panel { flex: 2; min-width: 450px; box-sizing: border-box; }
+        
+        label { display: block; margin-bottom: 6px; width: 100%; font-weight: 500; font-size: 0.95em; color: #343a40; }
+        input, select, textarea { padding: 10px; border: 1px solid var(--theme-input-border-color); border-radius: 5px; font-size: 1em; width: 100%; margin-bottom: 12px; box-sizing: border-box; }
+
+        button { background-color: var(--theme-primary-color); color: var(--theme-text-on-primary); border: none; padding: 12px 18px; font-size: 1em; font-weight: 500; cursor: pointer; border-radius: 6px; margin-top:15px; transition: 0.2s; }
+        button:hover { background-color: var(--theme-button-hover-bg); transform: translateY(-1px); }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-danger { background-color: #e74c3c; color: white; }
+        .btn-accent { background-color: var(--theme-secondary-color); color: var(--theme-text-on-secondary); }
+        .btn-block { width: 100%; display: block; }
+
+        .square-btn-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-bottom: 5px; }
+        .square-btn { width: 38px; height: 38px; line-height: 36px; border: 1px solid #adb5bd; background-color: #f8f9fa; text-align: center; cursor: pointer; border-radius: 4px; font-size: 0.85em; font-weight: 500; }
+        .square-btn.selected { background-color: var(--theme-secondary-color); color: var(--theme-text-on-secondary); font-weight: bold; border-color: var(--theme-secondary-color); }
+        
+        #dynamic-digit-buttons .square-btn-group { flex-wrap: nowrap !important; overflow: hidden; width: 100%; gap: 2px; }
+        #dynamic-digit-buttons .square-btn { flex: 1 1 0; width: auto !important; min-width: 0 !important; padding: 0 !important; }
+
+        /* MINI PLAN CSS */
+        #mini-plan-container { overflow-x: auto; margin-bottom: 15px; border-radius: 5px; border: 1px solid var(--theme-input-border-color); background: var(--theme-card-background-color); }
+        #mini-plan-table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+        #mini-plan-table th, #mini-plan-table td { border: 1px solid var(--theme-input-border-color); text-align: center; padding: 8px 4px; position: relative; }
+        #mini-plan-table th { background-color: var(--theme-secondary-color); color: white; }
+        #mini-plan-table td.mini-cell { cursor: pointer; transition: background 0.2s; }
+        #mini-plan-table td.mini-cell:hover { background-color: #e9ecef; }
+        body.dark-mode #mini-plan-table td.mini-cell:hover { background-color: #444; }
+        #mini-plan-table td.mini-selected { background-color: var(--theme-primary-color) !important; color: white !important; font-weight: bold; box-shadow: inset 0 0 0 2px #fff;}
+
+        .cube-btn { width: 45px !important; height: 45px !important; padding: 0 !important; margin: 0 !important; display: inline-flex !important; align-items: center; justify-content: center; font-size: 1.8em !important; font-weight: bold !important; border-radius: 10px !important; flex-shrink: 0; line-height: 1; }
+
+        .espece-gps-line { display: flex; align-items: center; justify-content: flex-start; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        #voir-sur-carte, #voir-plan-semis { margin: 0; padding: 4px 8px; font-size: 0.85em; width: auto; border-radius: 4px; display:inline-block; }
+        #voir-sur-carte { background-color: var(--theme-gps-button-bg); color: var(--theme-gps-button-text); }
+        
+        .modal { display: none; position: fixed; z-index: 100000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: var(--theme-card-background-color); margin: 5% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 800px; border-radius: 8px; max-height: 90vh; overflow-y: auto; }
+        
+        .input-inc-dec { display: flex; align-items: center; justify-content: center; margin-bottom: 12px; gap: 10px; }
+        .input-inc-dec input { width: 90px !important; height: 45px !important; margin: 0; text-align: center; font-size: 1.2em; font-weight: bold; box-sizing: border-box; }
+
+        .save-buttons-container { display: flex; gap: 5px; margin-top: 15px; }
+        .save-buttons-container button { flex: 1; padding: 15px 2px; font-size: 0.85em; line-height: 1.2; text-align: center; white-space: normal; }
+
+        .notation-group-container { border: 1px solid var(--theme-input-border-color); padding: 15px; border-radius: 8px; margin-bottom: 15px; background-color: var(--theme-card-background-color); transition: all 0.3s ease; }
+        
+        #sowing-plan-grid-container { max-height: 60vh; overflow: auto; border: 1px solid var(--theme-input-border-color); position: relative; }
+        #sowing-plan-grid-container table { border-collapse: separate; border-spacing: 0; }
+        .sticky-x { position: sticky; top: 0; background: #eee; z-index: 10; font-weight: bold; border-bottom: 2px solid #999 !important; }
+        .sticky-y { position: sticky; left: 0; background: #eee; z-index: 9; font-weight: bold; border-right: 2px solid #999 !important; }
+        .sticky-corner { position: sticky; top: 0; left: 0; z-index: 11; background: #ddd; }
+        
+        .type-M { background-color: #e3f2fd; color:#333; } 
+        .type-F { background-color: #e8f5e9; color:#333; } 
+        .type-H { background-color: #fff9c4; color:#333; } 
+        .variete-highlight { font-weight: 900; box-shadow: inset 0 0 0 3px #333; border-radius: 4px; }
+        .hatched-pattern { background-image: linear-gradient(45deg, rgba(0,0,0,0.15) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.15) 75%, transparent 75%, transparent); background-size: 8px 8px; }
+        .multi-selected { background-color: #e74c3c !important; color: white !important; box-shadow: inset 0 0 0 2px #c0392b !important; }
+
+        .interactive-controls { background-color: #f1f8e9; border: 1px solid #c8e6c9; padding: 10px; margin-bottom: 10px; border-radius: 6px; display: none; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .interactive-controls.active { display: flex; }
+        .interactive-label { font-weight: bold; color: var(--theme-secondary-color); font-size: 0.9em; margin-right:5px;}
+        .interactive-val { font-weight: bold; color: #333; background: rgba(255,255,255,0.8); padding: 1px 4px; border-radius: 3px; font-size: 1.1em; display:block; margin-top:2px; border: 1px solid rgba(0,0,0,0.1); text-shadow: 0 0 2px white; }
+        
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; margin-right: 10px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--theme-secondary-color); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .progress-container { width: 100%; background-color: #e0e0e0; border-radius: 5px; margin-bottom: 15px; height: 20px; overflow: hidden; position: relative; }
+        .progress-bar { height: 100%; background-color: var(--theme-secondary-color); width: 0%; transition: width 0.5s ease; }
+        .progress-text { position: absolute; width: 100%; text-align: center; top: 0; line-height: 20px; font-size: 0.8em; color: #333; font-weight: bold; text-shadow: 0 0 2px white; }
+        
+        .mic-btn { position: absolute; right: 10px; bottom: 50px; background-color: white; border: 1px solid #ccc; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 1.2em; }
+        .mic-btn.listening { background-color: #e74c3c; color: white; animation: pulse 1.5s infinite; border-color: #c0392b; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        .chip-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+        .chip { background-color: var(--theme-input-border-color); padding: 4px 10px; border-radius: 15px; font-size: 0.85em; cursor: pointer; transition: 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+        .chip:hover { background-color: var(--theme-secondary-color); color: white; }
+
+        .setup-section { border: 1px solid var(--theme-input-border-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; background: var(--theme-card-background-color);}
+
+        /* PHOTO MODULE SPECIFIC */
+        .photo-module-btn {
+            background-color: #2980b9;
+            color: white;
+            font-size: 1.5em;
+            padding: 15px;
+            width: 100%;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .photo-module-btn:hover { background-color: #1f6391; transform: scale(1.02); }
+
+        @media (max-width: 768px) {
+            html { font-size: 12px; }
+            .sidebar, .main-panel { min-width: 100% !important; box-sizing: border-box; }
+        }
+    </style>
+</head>
+<body>
+
+<div style="text-align: center; margin-bottom: 15px;">
+    <svg width="200" height="70" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+        <path class="n-stylized" d="M88 50 L88 20 M88 20 L112 50 M112 50 L112 20" stroke="var(--theme-heading-color, #227A49)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(35, 35) scale(0.8)"><line class="plant-stem" x1="0" y1="15" x2="0" y2="-5"/><circle cx="0" cy="-10" r="6" fill="var(--theme-primary-color, #FFD700)"/><circle cx="0" cy="-10" r="3" fill="var(--theme-secondary-color, #A0522D)"/><path class="plant-leaf" d="M0,5 Q5,0 2,-5 Q-5,-2 0,5 Z"/></g>
+        <g transform="translate(65, 38) scale(0.8)"><rect class="plant-leaf" x="-3" y="-15" width="6" height="25" rx="2"/><path stroke="var(--theme-primary-color, #E6B800)" stroke-width="1.5" fill="none" d="M-2,-15 Q0,-20 2,-15 M0,-15 Q-3,-18 -4,-14 M0,-15 Q3,-18 4,-14"/><path class="plant-leaf" d="M2,0 Q10,-5 8,-12 L3,-10 Q8,-3 2,0 Z"/><path class="plant-leaf" d="M-2,0 Q-10,-5 -8,-12 L-3,-10 Q-8,-3 -2,0 Z"/></g>
+        <g transform="translate(135, 38) scale(0.7)"><line class="plant-stem" x1="0" y1="18" x2="0" y2="-2"/><circle cx="0" cy="-5" r="3" fill="var(--theme-colza-primary-color, #FFEB3B)"/><circle cx="-4" cy="-8" r="3" fill="var(--theme-colza-primary-color, #FFEB3B)"/><circle cx="4" cy="-8" r="3" fill="var(--theme-colza-primary-color, #FFEB3B)"/><circle cx="0" cy="-11" r="3" fill="var(--theme-colza-primary-color, #FFEB3B)"/><path class="plant-leaf" d="M0,12 Q6,8 3,2 Q-3,6 0,12 Z" transform="rotate(10)"/></g>
+        <g transform="translate(165, 38) scale(0.75)"><path class="plant-leaf" d="M0,15 Q-10,5 -5,-5 Q0,-10 5,-5 Q10,5 0,15 Z"/><circle cx="-3" cy="0" r="1.5" fill="var(--theme-soja-primary-color, %23E1BEE7)"/><circle cx="3" cy="0" r="1.5" fill="var(--theme-soja-primary-color, %23E1BEE7)"/><circle cx="0" cy="-4" r="1.5" fill="var(--theme-soja-primary-color, %23E1BEE7)"/></g>
+    </svg>
+</div>
+
+<h1 style="text-align:center; margin-top:0;">Newtea Photo</h1>
+
+<!-- ÉCRAN D'ACCUEIL : SÉLECTION / CRÉATION / IMPORT -->
+<div id="session-setup">
+    <label for="type-notation-session" data-i18n="notateur">Votre Nom / Notateur :</label>
+    <input type="text" id="type-notation-session" data-i18n-placeholder="notateur-placeholder" placeholder="Nom du notateur...">
+    <hr>
+    
+    <div class="setup-section">
+        <h3 data-i18n="h3-noter-existant">Noter un essai existant</h3>
+        <select id="choix-essai"></select>
+        <button id="confirmer-essai" class="btn-primary btn-block" data-i18n="confirmer-noter">Confirmer l'essai</button>
+    </div>
+
+    <div class="setup-section">
+        <h3 data-i18n="h3-importer-essai">Importer un essai (CSV Base)</h3>
+        <input type="file" id="import-new-trial-csv" accept=".csv" style="border: 1px solid var(--theme-secondary-color);">
+        <p style="font-size:0.8em; color:#666; margin-top:0;" data-i18n="desc-import-base">Charge un CSV contenant la structure d'un essai pour l'ajouter à la base de données locale.</p>
+    </div>
+
+    <div class="setup-section">
+        <h3 data-i18n="h3-creer-essai">Créer un nouvel essai</h3>
+        <label data-i18n="nom-essai">Nom de l'essai :</label>
+        <input type="text" id="new-trial-name" data-i18n-placeholder="ph-nom-essai" placeholder="Ex: Essai_Rendement_2026">
+        
+        <label data-i18n="espece">Espèce :</label>
+        <select id="new-trial-espece">
+            <option value="Mais" data-i18n="Mais">Maïs</option>
+            <option value="Tournesol" data-i18n="Tournesol">Tournesol</option>
+            <option value="Colza" data-i18n="Colza">Colza</option>
+            <option value="Soja" data-i18n="Soja">Soja</option>
+            <option value="Sorgho" data-i18n="Sorgho">Sorgho</option>
+        </select>
+        
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;">
+                <label data-i18n="colonnes-x">Colonnes (X) :</label>
+                <input type="number" id="new-trial-x" min="1" placeholder="Ex: 5">
+            </div>
+            <div style="flex:1;">
+                <label data-i18n="lignes-y">Lignes (Y) :</label>
+                <input type="number" id="new-trial-y" min="1" placeholder="Ex: 10">
+            </div>
+        </div>
+        <button id="creer-essai" class="btn-accent btn-block" data-i18n="btn-creer-essai">Créer le plan et commencer</button>
+    </div>
+</div>
+
+<!-- APPLICATION PRINCIPALE -->
+<div id="app-container" style="display:none;">
+    <div class="tabs">
+        <button class="tablink active" onclick="openTab(event, 'Note')" id="defaultOpen" data-i18n="tab-Note">Appareil Photo</button>
+        <button class="tablink" onclick="openTab(event, 'Configuration')" data-i18n="tab-Configuration">Configuration</button>
+    </div>
+
+    <!-- ONGLET PRINCIPAL (PHOTO) -->
+    <div id="Note" class="tabcontent" style="display:block;">
+        <div id="app-content">
+            <div class="sidebar">
+                
+                <div class="progress-container">
+                    <div id="trial-progress-bar" class="progress-bar"></div>
+                    <div id="trial-progress-text" class="progress-text">0 / 0 (0%)</div>
+                </div>
+
+                <div class="selector-group"> 
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <h4 data-i18n="num-parcelle" style="margin: 0;">Numéro de parcelle</h4>
+                        <div class="mode-selection-line" style="display: flex; align-items: center; gap: 5px;">
+                            <label for="mode-avancement" style="width:auto; margin:0; font-size:0.8em; color:#666;" data-i18n="mode">Mode:</label>
+                            <select id="mode-avancement" onchange="generatePlotOrder()" style="width: auto; min-width: 70px; margin: 0; padding: 4px; font-size: 0.85em;">
+                                <option value="S">S</option>
+                                <option value="Z" selected>Z</option>
+                                <option value="U">U</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="dynamic-digit-buttons"></div>
+                    <div id="mini-plan-container" style="display:none;"></div>
+                </div>
+
+                <div class="parcelle-navigation" style="display: flex; gap: 5px; justify-content: space-around; margin-top: 15px;">
+                  <button id="parcelle-precedente" class="btn-secondary" data-i18n="prec">← Préc.</button>
+                  <button id="valider-parcelle" class="btn-primary" data-i18n="valider">Valider Parcelle</button>
+                  <button id="parcelle-suivante" class="btn-primary" data-i18n="suiv">Suiv. →</button>
+                </div>
+                
+                <hr>
+                
+                <p id="variete-text" style="font-weight:bold; font-size:1.1em; color:var(--theme-heading-color); margin-bottom: 5px;"><span data-i18n="lignee">Nom / Variété :</span> </p>
+                <div class="espece-gps-line" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 10px; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <p id="espece-text" style="margin:0; color:var(--theme-secondary-color); font-weight:bold;"></p>
+                        <button id="voir-sur-carte" style="margin:0; padding:4px 8px; font-size:0.85em;"><b>GPS</b></button>
+                        <button id="voir-plan-semis" style="display:none; margin:0; padding:4px 8px; font-size:0.85em;" data-i18n="plan-semis">Plan de Semis</button>
+                    </div>
+                    
+                    <div class="input-inc-dec" style="margin:0; gap: 5px;">
+                        <label for="rep" style="width:auto; margin:0; font-size:0.85em;" data-i18n="rep">Rep :</label>
+                        <button type="button" id="minus-rep" class="btn-secondary cube-btn" style="width: 28px !important; height: 28px !important; font-size: 1.2em !important;">-</button>
+                        <input type="text" id="rep" value="A" maxlength="2" style="width: 35px !important; height: 28px !important; margin:0; padding:0; text-align: center; font-weight: bold;">
+                        <button type="button" id="plus-rep" class="btn-secondary cube-btn" style="width: 28px !important; height: 28px !important; font-size: 1.2em !important;">+</button>
+                    </div>
+                </div>
+
+                <hr>
+                
+                <div id="central-notations-container" style="display:block; margin-top:10px;">
+                    
+                    <!-- MENU : PARAMETRES PARCELLE -->
+                    <div id="not-param" class="notation-group-container">
+                        <h4 style="margin-bottom: 10px;" data-i18n="h4-param-parc">Paramètres de la Parcelle</h4>
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div>
+                                <label data-i18n="param-nom-var">Nom / Variété :</label>
+                                <input type="text" id="param-variete" style="margin:0;">
+                            </div>
+                            <div>
+                                <label data-i18n="param-type">Type de parcelle :</label>
+                                <select id="param-type" style="margin:0;">
+                                    <option value="">-- Vide --</option>
+                                    <option value="M">M (Mâle)</option>
+                                    <option value="F">F (Femelle)</option>
+                                    <option value="H">H (Hybride)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MODULE PHOTO CENTRAL -->
+                    <div class="notation-group-container" style="border: 2px solid #2980b9; background-color: #eaf2f8;">
+                        <h4 style="color: #2980b9; margin-bottom:10px; text-align:center;">📷 Prise de Photo</h4>
+                        <div style="display:flex; align-items:center; gap:5px; width:100%; justify-content:center; margin-bottom: 15px;">
+                            <label style="width:auto; margin:0;">Préfixe:</label>
+                            <input type="text" id="photo-prefix" size="5" placeholder="PH" value="PH" style="width:60px !important; margin:0;">
+                            <label style="width:auto; margin:0; margin-left:10px;">Num:</label>
+                            <input type="number" id="photo-num" value="1" min="1" style="width:80px !important; margin:0;">
+                            <button class="btn-secondary cube-btn" style="width:35px !important; height:35px !important; margin-left:5px;" onclick="document.getElementById('photo-num').value = Math.max(1, document.getElementById('photo-num').value - 1)">-</button>
+                            <button class="btn-secondary cube-btn" style="width:35px !important; height:35px !important; margin-left:5px;" onclick="document.getElementById('photo-num').value++">+</button>
+                        </div>
+                        <button class="photo-module-btn" onclick="triggerPhoto()">
+                            <span>📷</span> PRENDRE LA PHOTO
+                        </button>
+                        <input type="file" id="file-input-main" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoUpload(event)">
+                        <p style="text-align:center; font-size:0.8em; color:#666; margin-top:8px;">L'enregistrement de la parcelle est automatique après la photo.</p>
+                    </div>
+
+                </div>
+                
+                <hr>
+                <div style="position: relative; margin-top: 15px;">
+                    <label for="obs" data-i18n="observations">Observations:</label>
+                    <textarea id="obs" rows="2" style="padding-right: 40px;"></textarea>
+                    <span id="clear-obs" style="position: absolute; right: 10px; top: 35px; cursor: pointer; color: #e74c3c; font-weight: bold; font-size: 1.2em; display: none;">×</span>
+                    <div id="mic-btn" class="mic-btn" style="bottom: auto; top:35px;" onclick="toggleDictation()">🎤</div>
+                    
+                    <div id="freq-comments-container" class="chip-container"></div>
+                </div>
+
+                <div id="save-buttons-placeholder">
+                    <div class="save-buttons-container" id="main-save-buttons">
+                        <button id="enregistrer-prec" class="btn-accent">← Enr. Sans Photo (Préc.)</button>
+                        <button id="enregistrer" class="btn-primary">Enregistrer Sans Photo</button>
+                        <button id="enregistrer-suivant" class="btn-accent">Enr. Sans Photo (Suiv.) →</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="main-panel">
+                <p id="date-heure-info-display" style="font-style:italic; color:#666;"></p> 
+                <h4 data-i18n="derniers-enregistrements">Derniers enregistrements</h4>
+                <div style="overflow-x:auto;">
+                    <table id="recap-table" style="width:100%; border-collapse:collapse;">
+                        <thead><tr style="background:#eee; text-align:left;">
+                            <th data-i18n="th-essai" style="padding:5px;">Essai</th>
+                            <th data-i18n="th-parc" style="padding:5px;">Parc.</th>
+                            <th data-i18n="th-rep" style="padding:5px;">Rep</th>
+                            <th style="padding:5px;">Photos</th>
+                            <th data-i18n="th-act" style="padding:5px;">Act.</th>
+                        </tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONGLET CONFIGURATION -->
+    <div id="Configuration" class="tabcontent">
+        <label data-i18n="choix-langue">Langue :</label>
+        <select id="lang-select">
+            <option value="fr">Français</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+        </select>
+        
+        <div style="display:flex; align-items:center; margin-top:15px; margin-bottom:15px;">
+            <label style="width:auto; margin:0 10px 0 0;" data-i18n="mode-sombre">Mode Sombre :</label>
+            <label class="switch">
+                <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div style="display:flex; align-items:center; margin-top:15px; margin-bottom:15px;">
+            <label style="width:auto; margin:0 10px 0 0;">Sélection parcelle :</label>
+            <select id="selection-mode-toggle" onchange="toggleSelectionMode()" style="margin:0;">
+                <option value="digits">Blocs de numéros (1-9)</option>
+                <option value="miniplan">Mini-Plan (Aperçu)</option>
+            </select>
+        </div>
+        
+        <hr>
+        <button id="changer-essai" class="btn-secondary btn-block" data-i18n="changer-essai">Retour Menu / Changer d'essai</button>
+        <hr>
+        <label data-i18n="date-obs">Date Obs :</label><input type="date" id="custom-date">
+        <label data-i18n="heure-obs">Heure :</label><input type="time" id="custom-time">
+        <hr>
+        <label data-i18n="meteo">Météo (Condition) :</label>
+        <select id="meteo-select">
+            <option value="Soleil" data-i18n="meteo-soleil">Soleil</option>
+            <option value="Eclaircies" data-i18n="meteo-eclaircies">Eclaircies</option>
+            <option value="Nuageux" data-i18n="meteo-nuageux">Nuageux</option>
+            <option value="Couvert" data-i18n="meteo-couvert">Couvert</option>
+            <option value="Vent" data-i18n="meteo-vent">Vent</option>
+            <option value="Pluie" data-i18n="meteo-pluie">Pluie</option>
+        </select>
+        
+        <hr>
+        <label style="color:#d35400; font-weight:bold;" data-i18n="label-import">Overlay Interactif (Session uniquement) :</label>
+        <input type="file" id="import-external-csv" accept=".csv" style="border: 1px solid #d35400;">
+        <p style="font-size:0.8em; color:#666;" data-i18n="desc-import">Superpose les données sur le plan. Ne modifie pas la base des essais.</p>
+        
+        <hr>
+        <h3 data-i18n="h3-gestion-donnees" style="color:#c0392b;">Gestion des données</h3>
+        <button id="partager-csv" class="btn-primary btn-block" style="margin-bottom:10px; background-color: #2980b9;">📥/📤 Sauvegarder CSV & Partager</button>
+        <button id="telecharger-plan-csv" class="btn-accent btn-block" style="margin-bottom:10px;">📥/📤 Sauvegarder & Partager Plan Essai</button>
+        
+        <button id="reset-data-local" class="btn-danger btn-block" style="margin-bottom:10px;" data-i18n="reset-donnees">⚠️ Reset Données (Purger les Notes)</button>
+        <button id="reset-base-essais" class="btn-danger btn-block" style="background-color:#900;" data-i18n="reset-base">⚠️ Reset Base Essais (Purger tous les plans)</button>
+    </div>
+</div>
+
+<!-- MODAL GPS -->
+<div id="gpsChoiceModal" class="modal">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+        <h3 data-i18n="h3-gps-options">Options GPS</h3>
+        <p id="gps-status-text" style="color:#666; font-style:italic;"></p>
+        <button id="btn-gps-aller" class="btn-primary btn-block" style="margin-bottom:10px;" data-i18n="btn-gps-aller">🗺️ Aller vers cet essai</button>
+        <button id="btn-gps-definir" class="btn-accent btn-block" style="margin-bottom:10px;" data-i18n="btn-gps-definir">📍 Définir la position ici</button>
+        <button onclick="document.getElementById('gpsChoiceModal').style.display='none'" class="btn-secondary btn-block" data-i18n="btn-cancel">Annuler</button>
+    </div>
+</div>
+
+<!-- SOWING PLAN MODAL -->
+<div id="sowingPlanModal" class="modal" style="z-index: 100000;">
+    <div class="modal-content"> 
+        <span class="close-button" id="closeSowingPlanModal" style="float:right; font-size:24px; cursor:pointer;">×</span>
+        <div style="display:flex; flex-direction:column; justify-content:flex-start;">
+            <h2 id="plan-modal-title" data-i18n="h2-plan" style="margin-bottom:10px;">Plan de Semis</h2>
+            
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:10px; background:#eee; padding:5px; border-radius:5px; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; align-items:center;">
+                    <label style="font-size:0.8em; margin:0 5px 0 0; font-weight:bold; color:#333;" data-i18n="avancement-hachure">Avancement (Hachuré) :</label>
+                    <label class="switch" style="transform:scale(0.8);">
+                        <input type="checkbox" id="todo-mode-toggle" onchange="openSowingPlan(); renderMiniPlan();" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div style="display:flex; align-items:center;">
+                    <label style="font-size:0.8em; margin:0 5px 0 0; font-weight:bold; color:#333;" data-i18n="deplacement-fleches">Déplacement (Flèches) :</label>
+                    <label class="switch" style="transform:scale(0.8);">
+                        <input type="checkbox" id="path-mode-toggle" onchange="openSowingPlan(); renderMiniPlan();">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div id="plan-interactive-controls" class="interactive-controls">
+                <div style="display:flex; align-items:center;">
+                    <span class="interactive-label" data-i18n="interactif">INTERACTIF</span>
+                    <label class="switch">
+                        <input type="checkbox" id="interactive-mode-toggle" onchange="openSowingPlan(); renderMiniPlan();">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div id="interactive-filters" style="display:none; flex-grow:1; gap:10px; align-items:center; flex-wrap:wrap;">
+                    <div style="flex-grow:1;">
+                        <label style="font-size:0.8em; margin:0; color:#333;" data-i18n="donnee">Donnée :</label>
+                        <select id="interactive-data-select" style="margin:0; padding:4px;" onchange="openSowingPlan(); renderMiniPlan();"></select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <hr>
+        <div id="sowing-plan-grid-container"></div>
+    </div>
+</div>
+
+
+<script>
+// ==========================================
+// TRANSLATIONS (Embedded)
+// ==========================================
+const translations = {
+fr: {
+    "title": "Newtea Photo", "choix-essai": "Choix de l'essai :", "notateur": "Votre Nom / Notateur :", "notateur-placeholder": "Nom...", "confirmer-noter": "Confirmer l'essai",
+    "tab-Note": "Appareil Photo", "tab-Configuration": "Configuration", "num-parcelle": "Numéro de parcelle", "mode": "Mode :", "prec": "← Préc.", "valider": "Valider Parcelle",
+    "suiv": "Suiv. →", "lignee": "Nom / Variété :", "plan-semis": "Plan de Semis", "rep": "Répétition :", 
+    "observations": "Observations :",
+    "derniers-enregistrements": "Derniers enregistrements", "th-essai": "Essai", "th-parc": "Parc.", "th-rep": "Rép.", "th-act": "Act.",
+    "choix-langue": "Langue :", "changer-essai": "Retour Menu / Changer d'essai", "reset-donnees": "⚠️ Reset Données (Purger les Notes)", "date-obs": "Date Obs :", "heure-obs": "Heure :",
+    "meteo": "Météo (Condition) :", "meteo-soleil": "Soleil", "meteo-eclaircies": "Éclaircies", "meteo-nuageux": "Nuageux", "meteo-couvert": "Couvert", "meteo-vent": "Vent", "meteo-pluie": "Pluie",
+    "h2-plan": "Plan de Semis", "valider-parcelle-plan": "Valider la parcelle",
+    "alert-choix-essai": "Veuillez choisir un essai", "alert-valider-parcelle": "Veuillez d'abord valider la parcelle", "alert-select-parcelle": "Sélectionnez une parcelle",
+    "alert-reset-notes-safe": "SÉCURITÉ : Un export de vos notes va être généré. Confirmer la suppression de toutes les notes sur l'appareil ?",
+    "alert-delete-line": "Supprimer cette ligne ?", "alert-rien": "Aucune donnée à exporter", "btn-cancel": "Annuler",
+    "Mais": "Maïs", "Tournesol": "Tournesol", "Colza": "Colza", "Soja": "Soja", "Sorgho": "Sorgho",
+    "label-import": "Overlay Interactif (Session) :", "desc-import": "Superpose les données sur le plan.",
+    "avancement-hachure": "Avancement (Hachuré) :", "deplacement-fleches": "Déplacement (Flèches) :", "interactif": "INTERACTIF", "donnee": "Donnée :",
+    "h4-param-parc": "Paramètres de la Parcelle", "param-nom-var": "Nom / Variété :", "param-type": "Type de parcelle :",
+    "h3-noter-existant": "Sélectionner un essai existant", "h3-importer-essai": "Importer un essai (CSV Base)", "desc-import-base": "Charge la structure d'un essai.",
+    "h3-creer-essai": "Créer un nouvel essai", "nom-essai": "Nom de l'essai :", "espece": "Espèce :", "colonnes-x": "Colonnes (X) :", "lignes-y": "Lignes (Y) :", "btn-creer-essai": "Créer le plan et commencer",
+    "reset-base": "⚠️ Reset Base Essais (Purger tous les plans)", 
+    "alert-reset-base-safe": "SÉCURITÉ : Une sauvegarde va être générée. Confirmer la suppression de TOUS les essais ?",
+    "h3-gps-options": "Options GPS", "btn-gps-aller": "🗺️ Aller vers cet essai", "btn-gps-definir": "📍 Définir la position ici", "gps-status-none": "Aucune position GPS.", "gps-status-ok": "Position enregistrée : "
+},
+en: {
+    "title": "Newtea Photo", "choix-essai": "Trial Choice:", "notateur": "Your Name:", "notateur-placeholder": "Name...", "confirmer-noter": "Confirm Trial",
+    "tab-Note": "Camera", "tab-Configuration": "Setup", "num-parcelle": "Plot Number", "mode": "Mode:", "prec": "← Prev.", "valider": "Validate Plot",
+    "suiv": "Next →", "lignee": "Name / Variety:", "plan-semis": "Planting Plan", "rep": "Repetition:", 
+    "observations": "Observations:",
+    "derniers-enregistrements": "Recent Records", "th-essai": "Trial", "th-parc": "Plot", "th-rep": "Rep.", "th-act": "Act.",
+    "choix-langue": "Language:", "changer-essai": "Back to Menu", "reset-donnees": "⚠️ Reset Local Data", "date-obs": "Date:", "heure-obs": "Time:",
+    "meteo": "Weather:", "meteo-soleil": "Sunny", "meteo-eclaircies": "Partly Cloudy", "meteo-nuageux": "Cloudy", "meteo-couvert": "Overcast", "meteo-vent": "Windy", "meteo-pluie": "Rainy",
+    "h2-plan": "Planting Plan", "valider-parcelle-plan": "Validate Plot",
+    "alert-choix-essai": "Please choose a trial", "alert-valider-parcelle": "Please validate the plot first", "alert-select-parcelle": "Select a plot",
+    "alert-reset-notes-safe": "SECURITY: Confirm deletion of all notes on the device?",
+    "alert-delete-line": "Delete this record?", "alert-rien": "No data to export", "btn-cancel": "Cancel",
+    "Mais": "Corn", "Tournesol": "Sunflower", "Colza": "Rapeseed", "Soja": "Soybean", "Sorgho": "Sorghum",
+    "label-import": "Interactive Overlay:", "desc-import": "Overlays data on the map.",
+    "avancement-hachure": "Progress (Hatched):", "deplacement-fleches": "Movement (Arrows):", "interactif": "INTERACTIVE", "donnee": "Data:",
+    "h4-param-parc": "Plot Parameters", "param-nom-var": "Name / Variety:", "param-type": "Plot Type:",
+    "h3-noter-existant": "Select existing trial", "h3-importer-essai": "Import Trial (CSV)", "desc-import-base": "Loads a trial structure.",
+    "h3-creer-essai": "Create a new trial", "nom-essai": "Trial Name:", "espece": "Species:", "colonnes-x": "Columns (X):", "lignes-y": "Rows (Y):", "btn-creer-essai": "Create Plan and Start",
+    "reset-base": "⚠️ Reset Trial Base", 
+    "alert-reset-base-safe": "SECURITY: Confirm deletion of ALL trials?",
+    "h3-gps-options": "GPS Options", "btn-gps-aller": "🗺️ Go to this trial", "btn-gps-definir": "📍 Set position here", "gps-status-none": "No GPS position.", "gps-status-ok": "Saved position: "
+}
+};
+
+function applyTranslations(lang) {
+    if(!translations[lang]) lang = 'fr';
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[lang][key]) el.innerHTML = translations[lang][key];
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (translations[lang][key]) el.placeholder = translations[lang][key];
+    });
+    localStorage.setItem('selected_lang', lang);
+}
+
+function getT(key) {
+    const lang = document.getElementById('lang-select').value;
+    return translations[lang] && translations[lang][key] ? translations[lang][key] : key;
+}
+
+// ==========================================
+// GLOBAL VARIABLES & INITIALIZATION
+// ==========================================
+const rawCsvData = `Code_Essai_Parcelle,variete,Essai,Espece,Gps,Plan_X,Plan_Y,Type
+1,LID 5053L SU,Test,Tournesol,"43.69,1.27",1,1,H
+2,MYLADY,Test,Mais,"43.47,-0.34",2,1,F
+3,LID PANDORE,Test,Sorgho,"41.75,-0.79",3,1,M
+4,ISIDOR,Test,Soja,"43.65,1.65",1,2,F
+5,LID TRETO,Test,Colza,"44.39,1.39",2,2,H
+6,LID 5053L SU,Test,Tournesol,"0.0,0.0",3,2,M
+7,ISIDOR,Test,Soja,"0.0,0.0",1,3,M
+8,MYLADY,Test,Mais,"0.0,0.0",2,3,F
+9,LID TRETO,Test,Colza,"0.0,0.0",3,3,H
+10,LID PANDORE,Test,Sorgho,"41.75,-0.79",5,6,M`;
+
+let varieteData = [], appObservations = [], currentEssai = null, currentDigitCount = 3, currentParcelleArray = ['0','0','0'], selectedPlotCodeForNavigation = null, currentEspece = null, currentGps = null, parcelleValideeCode = null, currentPlotOrder = [];
+let externalData = []; 
+let isSaving = false;
+
+function playSuccessSound() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(1000, ctx.currentTime);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.1);
+        osc.start(); osc.stop(ctx.currentTime + 0.1);
+    } catch(e) {}
+}
+
+function parseCSVToObjects(csvString, delimiter = ';') {
+    const lines = csvString.trim().split(/\r?\n/);
+    if (lines.length < 2) return [];
+    let sep = delimiter;
+    if (lines[0].indexOf(sep) === -1) { sep = lines[0].indexOf(',') > -1 ? ',' : ';'; }
+    const regex = new RegExp(`${sep}(?=(?:(?:[^"]*"){2})*[^"]*$)`);
+    const cleanVal = (val) => {
+        if (!val) return "";
+        val = val.trim();
+        if (val.startsWith('"') && val.endsWith('"')) val = val.substring(1, val.length - 1);
+        return val;
+    };
+    const headers = lines[0].split(regex).map(cleanVal);
+    const objects = [];
+    for (let i = 1; i < lines.length; i++) {
+        const currentline = lines[i].split(regex);
+        if(currentline.length >= 1 && lines[i].trim() !== "") {
+            const obj = {};
+            headers.forEach((h, idx) => { obj[h] = cleanVal(currentline[idx]); });
+            objects.push(obj);
+        }
+    }
+    return objects;
+}
+
+function loadVarieteDataLocal() {
+    const saved = localStorage.getItem('newtea_trials');
+    const defaultTestTrial = parseCSVToObjects(rawCsvData, ',');
+    if (saved) {
+        varieteData = JSON.parse(saved);
+        if (!varieteData.some(p => p.Essai === 'Test')) {
+            varieteData = defaultTestTrial.concat(varieteData);
+            saveVarieteDataLocal();
+        }
+    } else {
+        varieteData = defaultTestTrial;
+        saveVarieteDataLocal();
+    }
+}
+
+function saveVarieteDataLocal() { localStorage.setItem('newtea_trials', JSON.stringify(varieteData)); }
+
+function toggleDarkMode() {
+    const isDark = document.getElementById('dark-mode-toggle').checked;
+    if (isDark) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('newtea_dark_mode', 'true');
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('newtea_dark_mode', 'false');
+    }
+}
+
+window.toggleSelectionMode = () => {
+    const modeSelect = document.getElementById('selection-mode-toggle');
+    if(!modeSelect) return;
+    const mode = modeSelect.value;
+    localStorage.setItem('newtea_selection_mode', mode);
+    
+    if (mode === 'miniplan') {
+        document.getElementById('dynamic-digit-buttons').style.display = 'none';
+        document.getElementById('mini-plan-container').style.display = 'block';
+        renderMiniPlan();
+    } else {
+        document.getElementById('dynamic-digit-buttons').style.display = 'block';
+        document.getElementById('mini-plan-container').style.display = 'none';
+    }
+};
+
+window.populateInteractiveFilters = () => {
+    if (!externalData || externalData.length === 0) return;
+    const dataSelect = document.getElementById('interactive-data-select');
+    if(dataSelect && dataSelect.options.length === 0) {
+         const fixed = ["ESSAI", "Parcelle", "Variete", "Date", "Heure", "Meteo", "Rep", "Photos", "Observations"];
+         const keys = Object.keys(externalData[0]).filter(k => !fixed.includes(k) && k !== 'id');
+         keys.sort().forEach(k => {
+             const opt = document.createElement('option'); opt.value = k; opt.text = k; dataSelect.appendChild(opt);
+         });
+    }
+};
+
+window.renderMiniPlan = () => {
+    const container = document.getElementById('mini-plan-container');
+    if (!container || container.style.display === 'none') return;
+    if (!currentEssai) return;
+    
+    const plots = varieteData.filter(p => p.Essai === currentEssai);
+    if (!plots.length || !plots[0].Plan_X) {
+        container.innerHTML = '<p style="text-align:center; padding:10px; color:#666;">Aucun plan de semis enregistré.</p>';
+        return;
+    }
+
+    const currentPadded = String(selectedPlotCodeForNavigation).padStart(currentDigitCount, '0');
+    const currentPlot = plots.find(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount, '0') === currentPadded);
+    
+    let curX = currentPlot ? parseInt(currentPlot.Plan_X) : 1;
+    let curY = currentPlot ? parseInt(currentPlot.Plan_Y) : 1;
+
+    let minX = Math.min(...plots.map(p => parseInt(p.Plan_X)));
+    let maxX = Math.max(...plots.map(p => parseInt(p.Plan_X)));
+    let minY = Math.min(...plots.map(p => parseInt(p.Plan_Y)));
+    let maxY = Math.max(...plots.map(p => parseInt(p.Plan_Y)));
+
+    let startX = Math.max(minX, curX - 3), endX = Math.min(maxX, startX + 7);
+    if (endX - startX < 7) startX = Math.max(minX, endX - 7);
+    let startY = Math.max(minY, curY - 1), endY = Math.min(maxY, startY + 2);
+    if (endY - startY < 2) startY = Math.max(minY, endY - 2);
+
+    const isInteractive = document.getElementById('interactive-mode-toggle')?.checked;
+    const selectedDataKey = document.getElementById('interactive-data-select')?.value;
+    const todoMode = document.getElementById('todo-mode-toggle')?.checked !== false;
+
+    let html = `<table id="mini-plan-table"><thead><tr><th>Y\\X</th>`;
+    for(let c = startX; c <= endX; c++) html += `<th>${c}</th>`;
+    html += `</tr></thead><tbody>`;
+
+    for(let r = startY; r <= endY; r++) {
+        html += `<tr><td style="background-color: var(--theme-secondary-color); color: white; font-weight: bold;">${r}</td>`;
+        for(let c = startX; c <= endX; c++) {
+            const p = plots.find(plot => parseInt(plot.Plan_X) === c && parseInt(plot.Plan_Y) === r);
+            let classes = ["mini-cell"];
+            let onClick = ""; let cellContent = "";
+
+            if (p) {
+                const codeOriginal = String(p.Code_Essai_Parcelle).padStart(currentDigitCount, '0');
+                let displayContent = p.Type ? p.Type : '';
+
+                if (p.Type === 'M') classes.push('type-M');
+                else if (p.Type === 'F') classes.push('type-F');
+                else if (p.Type === 'H') classes.push('type-H');
+
+                if (codeOriginal === currentPadded) classes.push("mini-selected");
+
+                if (todoMode) {
+                    const isDone = appObservations.some(obs => String(obs.Parcelle).padStart(currentDigitCount,'0') === codeOriginal && obs.ESSAI === currentEssai);
+                    if(isDone) classes.push('hatched-pattern');
+                }
+
+                if (isInteractive && selectedDataKey && externalData) {
+                    let matches = externalData.filter(d => d.ESSAI === currentEssai && String(d.Parcelle).padStart(currentDigitCount,'0') === codeOriginal);
+                    if(matches.length > 0 && matches[0][selectedDataKey]) {
+                        displayContent = `<span class="interactive-val" style="font-size:0.9em; padding:1px; line-height:1;">${matches[0][selectedDataKey]}</span>`;
+                    }
+                }
+
+                cellContent = `${parseInt(p.Code_Essai_Parcelle)}<br><span style="font-size:0.75em; position:relative; z-index:2; display:block; margin-top:2px;">${displayContent}</span>`;
+                onClick = `onclick="selectFromPlan('${codeOriginal}')"`;
+            }
+
+            html += `<td class="${classes.join(' ')}" ${onClick}>${cellContent}</td>`;
+        }
+        html += `</tr>`;
+    }
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+};
+
+window.selectFromPlan = (code) => {
+    selectedPlotCodeForNavigation = String(code).padStart(currentDigitCount, '0');
+    updateUIForSelectedPlot(selectedPlotCodeForNavigation);
+    parcelleValideeCode = null;
+    document.getElementById('valider-parcelle').style.display = 'block';
+    
+    const notationArea = document.getElementById('central-notations-container');
+    const obsArea = document.getElementById('obs').parentNode;
+    const saveArea = document.getElementById('save-buttons-placeholder');
+    [notationArea, obsArea, saveArea].forEach(el => {
+        if(el) { el.style.opacity = '0.4'; el.style.pointerEvents = 'none'; }
+    });
+    
+    const modal = document.getElementById('sowingPlanModal');
+    if(modal) modal.style.display = 'none';
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('selected_lang') || 'fr';
+    const langSelect = document.getElementById('lang-select');
+    if (langSelect) langSelect.value = savedLang;
+    applyTranslations(savedLang);
+    
+    if (localStorage.getItem('newtea_dark_mode') === 'true') {
+        document.getElementById('dark-mode-toggle').checked = true;
+        document.body.classList.add('dark-mode');
+    }
+
+    const savedSelectionMode = localStorage.getItem('newtea_selection_mode') || 'digits';
+    const modeSelect = document.getElementById('selection-mode-toggle');
+    if (modeSelect) modeSelect.value = savedSelectionMode;
+    toggleSelectionMode();
+    
+    loadVarieteDataLocal();
+    initEssaiSelector();
+    loadLocalObservations();
+    setupEventListeners();
+
+    const obsInput = document.getElementById('obs');
+    const clearObsBtn = document.getElementById('clear-obs');
+    if (obsInput && clearObsBtn) {
+        clearObsBtn.style.display = obsInput.value ? 'block' : 'none';
+        obsInput.addEventListener('input', () => { clearObsBtn.style.display = obsInput.value ? 'block' : 'none'; });
+        clearObsBtn.onclick = () => { obsInput.value = ''; clearObsBtn.style.display = 'none'; obsInput.focus(); };
+    }
+
+    const now = new Date();
+    document.getElementById('custom-date').valueAsDate = now;
+    document.getElementById('custom-time').value = now.toTimeString().substring(0,5);
+
+    document.getElementById('import-external-csv').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            try {
+                let content = evt.target.result;
+                let sep = ';';
+                if (content.split('\n')[0].indexOf(';') === -1 && content.split('\n')[0].indexOf(',') > -1) sep = ',';
+                externalData = parseCSVToObjects(content, sep);
+                if (externalData.length > 0) {
+                    populateInteractiveFilters();
+                    renderMiniPlan();
+                    alert(getT('alert-import-success').replace('{n}', externalData.length));
+                } else alert("Aucune donnée trouvée.");
+            } catch (err) { alert("Erreur lecture CSV."); console.error(err); }
+        };
+        reader.readAsText(file);
+    });
+
+    document.getElementById('import-new-trial-csv').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            try {
+                let content = evt.target.result;
+                let sep = ';';
+                if (content.split('\n')[0].indexOf(';') === -1 && content.split('\n')[0].indexOf(',') > -1) sep = ',';
+                const newData = parseCSVToObjects(content, sep);
+                if (newData.length > 0) {
+                    varieteData = varieteData.concat(newData);
+                    saveVarieteDataLocal();
+                    initEssaiSelector();
+                    alert(getT('alert-import-success').replace('{n}', newData.length));
+                } else alert("Aucune donnée trouvée.");
+            } catch (err) { alert("Erreur lecture CSV."); console.error(err); }
+        };
+        reader.readAsText(file);
+    });
+
+    document.getElementById('creer-essai').addEventListener('click', () => {
+        let name = document.getElementById('new-trial-name').value.trim();
+        let esp = document.getElementById('new-trial-espece').value;
+        let maxX = parseInt(document.getElementById('new-trial-x').value);
+        let maxY = parseInt(document.getElementById('new-trial-y').value);
+
+        if(!name || isNaN(maxX) || isNaN(maxY) || maxX <= 0 || maxY <= 0) {
+            alert("Veuillez remplir correctement le nom et les dimensions (X, Y)."); return;
+        }
+
+        let counter = 1;
+        let newPlots = [];
+        for(let y=1; y<=maxY; y++) {
+            for(let x=1; x<=maxX; x++) {
+                newPlots.push({
+                    Code_Essai_Parcelle: counter++, variete: `Y${y}-X${x}`, Essai: name, Espece: esp, Gps: "", Plan_X: x, Plan_Y: y, Type: ""
+                });
+            }
+        }
+        varieteData = varieteData.concat(newPlots);
+        saveVarieteDataLocal();
+        initEssaiSelector();
+        
+        document.getElementById('choix-essai').value = name;
+        document.getElementById('confirmer-essai').click();
+    });
+    
+    window.addEventListener('resize', () => {
+        if(document.getElementById('sowingPlanModal').style.display === 'block') {
+            const pathToggle = document.getElementById('path-mode-toggle');
+            if (pathToggle && pathToggle.checked) window.drawMovementPath();
+        }
+    });
+});
+
+function initEssaiSelector() {
+    const selector = document.getElementById('choix-essai');
+    selector.innerHTML = '<option value="">-- Trial --</option>';
+    if(!varieteData.length) return;
+    const essais = [...new Set(varieteData.map(i => i.Essai))].sort();
+    essais.forEach(e => {
+        const o = document.createElement('option');
+        o.value = e; o.textContent = e;
+        selector.appendChild(o);
+    });
+}
+
+function buildDigitButtons(count) {
+    const container = document.getElementById('dynamic-digit-buttons');
+    container.innerHTML = '';
+    currentParcelleArray = new Array(count).fill('0');
+    
+    for(let row = 0; row < count; row++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'square-btn-group';
+        rowDiv.id = 'digit-row-' + row;
+        for(let i=0; i<=9; i++) {
+            const b = document.createElement('div');
+            b.className = 'square-btn';
+            b.textContent = i;
+            b.onclick = () => {
+                rowDiv.querySelectorAll('.selected').forEach(s=>s.classList.remove('selected'));
+                b.classList.add('selected');
+                currentParcelleArray[row] = String(i);
+                selectedPlotCodeForNavigation = currentParcelleArray.join('');
+                updateUIForSelectedPlot(selectedPlotCodeForNavigation);
+            };
+            rowDiv.appendChild(b);
+        }
+        container.appendChild(rowDiv);
+    }
+}
+
+function generatePlotOrder() {
+    currentPlotOrder = [];
+    if (!currentEssai) return;
+    const plots = varieteData.filter(p => p.Essai === currentEssai);
+    const hasCoords = plots.every(p => p.Plan_X && p.Plan_Y);
+    if (hasCoords) {
+        plots.forEach(p => { p.x = parseInt(p.Plan_X); p.y = parseInt(p.Plan_Y); });
+        const mode = document.getElementById('mode-avancement').value;
+        switch (mode) {
+            case 'S': plots.sort((a,b) => { if (a.y !== b.y) return a.y - b.y; return (a.y % 2 !== 0) ? (a.x - b.x) : (b.x - a.x); }); break;
+            case 'Z': plots.sort((a,b) => (a.y - b.y) || (a.x - b.x)); break;
+            case 'U': plots.sort((a,b) => { if (a.x !== b.x) return a.x - b.x; return (a.x % 2 !== 0) ? (a.y - b.y) : (b.y - a.y); }); break;
+            case 'N': plots.sort((a,b) => (a.x - b.x) || (a.y - b.y)); break;
+        }
+        currentPlotOrder = plots.map(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0'));
+    } else {
+        currentPlotOrder = plots.map(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0')).sort();
+    }
+    updateProgressBar();
+}
+
+function updateProgressBar() {
+    if (!currentEssai || currentPlotOrder.length === 0) {
+        document.getElementById('trial-progress-bar').style.width = '0%';
+        document.getElementById('trial-progress-text').innerText = '0 / 0 (0%)';
+        return;
+    }
+    const donePlots = new Set(appObservations.filter(o => o.ESSAI === currentEssai).map(o => String(o.Parcelle).padStart(currentDigitCount,'0')));
+    let validDoneCount = 0;
+    currentPlotOrder.forEach(code => { if(donePlots.has(code)) validDoneCount++; });
+    const total = currentPlotOrder.length;
+    const percent = total > 0 ? Math.round((validDoneCount / total) * 100) : 0;
+    document.getElementById('trial-progress-bar').style.width = percent + '%';
+    document.getElementById('trial-progress-text').innerText = `${validDoneCount} / ${total} (${percent}%)`;
+}
+
+function handleNavigate(direction) {
+    if (!currentEssai) return alert(getT("alert-choix-essai"));
+    if (currentPlotOrder.length === 0) generatePlotOrder();
+    const currentCode = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0');
+    let idx = currentPlotOrder.indexOf(currentCode);
+    if (idx === -1) idx = 0; else idx = (idx + direction + currentPlotOrder.length) % currentPlotOrder.length;
+    selectedPlotCodeForNavigation = currentPlotOrder[idx];
+    updateUIForSelectedPlot(selectedPlotCodeForNavigation);
+    parcelleValideeCode = null;
+    document.getElementById('valider-parcelle').style.display = 'block';
+    
+    const notationArea = document.getElementById('central-notations-container');
+    const obsArea = document.getElementById('obs').parentNode;
+    const saveArea = document.getElementById('save-buttons-placeholder');
+    [notationArea, obsArea, saveArea].forEach(el => {
+        if(el) { el.style.opacity = '0.4'; el.style.pointerEvents = 'none'; }
+    });
+}
+
+function setupEventListeners() {
+    document.getElementById('lang-select').onchange = (e) => applyTranslations(e.target.value);
+    
+    document.getElementById('confirmer-essai').onclick = () => {
+        currentEssai = document.getElementById('choix-essai').value;
+        if (currentEssai) {
+            document.getElementById('session-setup').style.display = 'none';
+            document.getElementById('app-container').style.display = 'block';
+            
+            const plotsInTrial = varieteData.filter(p => p.Essai === currentEssai);
+            const maxPlotNum = Math.max(0, ...plotsInTrial.map(p => parseInt(p.Code_Essai_Parcelle) || 0));
+            if (maxPlotNum <= 99) currentDigitCount = 2;
+            else if (maxPlotNum <= 999) currentDigitCount = 3;
+            else currentDigitCount = 4;
+            
+            buildDigitButtons(currentDigitCount);
+            generatePlotOrder();
+            selectedPlotCodeForNavigation = currentPlotOrder[0] || "0".repeat(currentDigitCount);
+            updateUIForSelectedPlot(selectedPlotCodeForNavigation);
+        } else {
+            alert(getT("alert-choix-essai"));
+        }
+    };
+    
+    document.getElementById('valider-parcelle').onclick = () => {
+        parcelleValideeCode = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0');
+        document.getElementById('valider-parcelle').style.display = 'none';
+        document.getElementById('rep').value = 'A';
+        
+        const notationArea = document.getElementById('central-notations-container');
+        const obsArea = document.getElementById('obs').parentNode;
+        const saveArea = document.getElementById('save-buttons-placeholder');
+        [notationArea, obsArea, saveArea].forEach(el => {
+            if(el) { el.style.opacity = '1'; el.style.pointerEvents = 'auto'; }
+        });
+    };
+    document.getElementById('parcelle-suivante').onclick = () => handleNavigate(1);
+    document.getElementById('parcelle-precedente').onclick = () => handleNavigate(-1);
+
+    document.getElementById('voir-sur-carte').onclick = () => {
+        document.getElementById('gpsChoiceModal').style.display = 'block';
+        const txt = document.getElementById('gps-status-text');
+        const btnAller = document.getElementById('btn-gps-aller');
+        if(currentGps && currentGps.length > 3) {
+            txt.textContent = getT("gps-status-ok") + currentGps; btnAller.style.display = 'block';
+        } else {
+            txt.textContent = getT("gps-status-none"); btnAller.style.display = 'none';
+        }
+    };
+    
+    document.getElementById('btn-gps-aller').onclick = () => {
+        if(currentGps) window.open(`https://www.google.com/maps/search/?api=1&query=${currentGps.replace(/\s/g,'')}`, '_blank');
+        document.getElementById('gpsChoiceModal').style.display = 'none';
+    };
+    
+    document.getElementById('btn-gps-definir').onclick = () => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const newGps = `${pos.coords.latitude},${pos.coords.longitude}`;
+                varieteData.forEach(p => { if(p.Essai === currentEssai) p.Gps = newGps; });
+                saveVarieteDataLocal(); currentGps = newGps;
+                alert("Position GPS mise à jour !");
+                document.getElementById('gpsChoiceModal').style.display = 'none';
+            }, (error) => { alert("Erreur GPS : " + error.message); });
+        } else { alert("Geolocation non supportée."); }
+    };
+
+    document.getElementById('voir-plan-semis').onclick = () => openSowingPlan();
+    document.getElementById('closeSowingPlanModal').onclick = () => document.getElementById('sowingPlanModal').style.display='none';
+    
+    document.getElementById('enregistrer').onclick = () => enregistrerObservation(0);
+    document.getElementById('enregistrer-suivant').onclick = () => enregistrerObservation(1);
+    document.getElementById('enregistrer-prec').onclick = () => enregistrerObservation(-1);
+    
+    document.getElementById('partager-csv').onclick = partagerCSV;
+    document.getElementById('telecharger-plan-csv').onclick = telechargerPlanCSV;
+    document.getElementById('changer-essai').onclick = () => location.reload();
+    
+    document.getElementById('reset-data-local').onclick = () => {
+        if(confirm(getT("alert-reset-notes-safe"))) {
+            if(appObservations.length > 0) telechargerCSV();
+            setTimeout(() => { localStorage.removeItem('observations_photo_v1'); location.reload(); }, 1500);
+        }
+    };
+    
+    document.getElementById('reset-base-essais').onclick = () => {
+        if(confirm(getT("alert-reset-base-safe"))) {
+            if(varieteData.length > 0) telechargerSauvegardeGlobale();
+            setTimeout(() => { localStorage.removeItem('newtea_trials'); location.reload(); }, 1500);
+        }
+    };
+
+    document.getElementById('plus-rep').onclick = () => { let el = document.getElementById('rep'); el.value = String.fromCharCode(el.value.charCodeAt(0)+1); };
+    document.getElementById('minus-rep').onclick = () => { let el = document.getElementById('rep'); el.value = String.fromCharCode(Math.max(65, el.value.charCodeAt(0)-1)); };
+}
+
+function updateUIForSelectedPlot(code) {
+    const padded = String(code).padStart(currentDigitCount,'0');
+    currentParcelleArray = padded.split('');
+    
+    for(let row = 0; row < currentDigitCount; row++) {
+        const div = document.getElementById('digit-row-' + row);
+        if(div) {
+            div.querySelectorAll('.selected').forEach(s=>s.classList.remove('selected'));
+            for(let b of div.children) if(b.textContent === padded[row]) b.classList.add('selected');
+        }
+    }
+
+    const plot = varieteData.find(i => String(i.Code_Essai_Parcelle).padStart(currentDigitCount,'0') === padded && i.Essai === currentEssai);
+    
+    let coordsSuffix = "";
+    if (plot && plot.Plan_Y && plot.Plan_X) {
+        coordsSuffix = ` <span style="font-size:0.85em; color:#7f8c8d;">(${String(plot.Plan_Y).padStart(3, '0')},${String(plot.Plan_X).padStart(3, '0')})</span>`;
+    }
+    
+    document.getElementById('variete-text').innerHTML = `<span data-i18n="lignee">${getT("lignee")}</span> ` + (plot ? plot.variete : "INCONNUE") + coordsSuffix;
+    document.getElementById('param-variete').value = plot ? plot.variete : "";
+    document.getElementById('param-type').value = plot && plot.Type ? plot.Type : "";
+
+    currentEspece = plot ? plot.Espece : null;
+    currentGps = plot ? plot.Gps : null;
+    document.getElementById('espece-text').textContent = currentEspece ? currentEspece.toUpperCase() : "";
+    
+    document.body.className = document.body.className.replace(/theme-\w+/g, '');
+    if (currentEspece) document.body.classList.add(`theme-${currentEspece.toLowerCase()}`);
+    
+    document.getElementById('voir-sur-carte').style.opacity = (currentGps && currentGps.length > 3) ? '1' : '0.5';
+    
+    const plots = varieteData.filter(p => p.Essai === currentEssai);
+    document.getElementById('voir-plan-semis').style.display = (plots.length > 0 && plots[0].Plan_X) ? 'inline-block' : 'none';
+    
+    const isValide = (parcelleValideeCode === padded);
+    document.getElementById('valider-parcelle').style.display = isValide ? 'none' : 'block';
+    
+    const notationArea = document.getElementById('central-notations-container');
+    const obsArea = document.getElementById('obs').parentNode;
+    const saveArea = document.getElementById('save-buttons-placeholder');
+    [notationArea, obsArea, saveArea].forEach(el => {
+        if(el) { el.style.opacity = isValide ? '1' : '0.4'; el.style.pointerEvents = isValide ? 'auto' : 'none'; }
+    });
+    
+    renderMiniPlan();
+}
+
+function openSowingPlan() {
+    const plots = varieteData.filter(p => p.Essai === currentEssai);
+    if (!plots.length || !plots[0].Plan_X) return alert("Pas de plan de semis.");
+
+    const hasExternalData = externalData && externalData.length > 0;
+    const controlsDiv = document.getElementById('plan-interactive-controls');
+    const filtersDiv = document.getElementById('interactive-filters');
+    const toggle = document.getElementById('interactive-mode-toggle');
+    const todoToggle = document.getElementById('todo-mode-toggle');
+    const pathToggle = document.getElementById('path-mode-toggle');
+    
+    if(hasExternalData) {
+        populateInteractiveFilters();
+        controlsDiv.classList.add('active');
+        filtersDiv.style.display = toggle.checked ? 'flex' : 'none';
+    } else { controlsDiv.classList.remove('active'); toggle.checked = false; }
+
+    const isInteractive = toggle.checked;
+    const selectedDataKey = document.getElementById('interactive-data-select')?.value;
+    const selectedPadded = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0');
+    
+    let minX = Math.min(...plots.map(p => parseInt(p.Plan_X))), minY = Math.min(...plots.map(p => parseInt(p.Plan_Y)));
+    let maxX = Math.max(...plots.map(p => parseInt(p.Plan_X))), maxY = Math.max(...plots.map(p => parseInt(p.Plan_Y)));
+
+    let html = `<div id="sowing-plan-inner-wrapper" style="position:relative; display:inline-block; min-width:100%;">
+    <style>
+        #sowing-plan-inner-wrapper table { border: 1px solid #444; width: 100%; border-collapse: collapse; }
+        #sowing-plan-inner-wrapper th, #sowing-plan-inner-wrapper td { border: 1px solid var(--theme-input-border-color); text-align: center; padding: 8px; font-size: 0.9em; position:relative; }
+        #sowing-plan-inner-wrapper th { background-color: var(--theme-secondary-color); color: white; }
+        .current-plot-cell { background-color: var(--theme-primary-color) !important; color: white !important; font-weight: bold; box-shadow: inset 0 0 0 2px #fff; }
+    </style><table><thead><tr><th class="sticky-corner">Y\\X</th>`;
+    
+    for(let c=minX; c<=maxX; c++) html += `<th class="sticky-x">${c}</th>`;
+    html += '</tr></thead><tbody>';
+
+    for(let r=minY; r<=maxY; r++) {
+        html += `<tr><td class="sticky-y" style="background-color: var(--theme-secondary-color); color:white; font-weight:bold;">${r}</td>`;
+        for(let c=minX; c<=maxX; c++) {
+            const p = plots.find(plot => parseInt(plot.Plan_X) === c && parseInt(plot.Plan_Y) === r);
+            let codeOriginal = p ? String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') : "";
+            let classes = ['plan-cell'];
+            let displayContent = (p && p.Type) ? p.Type : '';
+            
+            if(p && todoToggle.checked) {
+                const isDone = appObservations.some(obs => String(obs.Parcelle).padStart(currentDigitCount,'0') === codeOriginal && obs.ESSAI === currentEssai);
+                if(isDone) classes.push('hatched-pattern');
+            }
+
+            if (p && isInteractive && selectedDataKey) {
+                let matches = externalData.filter(d => d.ESSAI === currentEssai && String(d.Parcelle).padStart(currentDigitCount,'0') === codeOriginal);
+                if(matches.length > 0 && matches[0][selectedDataKey]) {
+                    displayContent = `<span class="interactive-val">${matches[0][selectedDataKey]}</span>`;
+                }
+            } 
+
+            if (p) {
+                if (p.Type === 'M') classes.push('type-M'); else if (p.Type === 'F') classes.push('type-F'); else if (p.Type === 'H') classes.push('type-H');
+                if (codeOriginal === selectedPadded) classes.push('current-plot-cell');
+            }
+
+            html += `<td class="${classes.join(' ')}" style="${p ? 'cursor:pointer;' : 'background:transparent;'}" data-code="${codeOriginal}" onclick="selectFromPlan('${codeOriginal}')">
+                        ${p ? parseInt(p.Code_Essai_Parcelle) : ""}<br><span style="font-size:0.75em; position:relative; z-index:2;">${displayContent}</span></td>`;
+        }
+        html += '</tr>';
+    }
+    html += '</tbody></table></div>';
+    
+    document.getElementById('sowing-plan-grid-container').innerHTML = html;
+    document.getElementById('sowingPlanModal').style.display = 'block';
+
+    if (pathToggle && pathToggle.checked) setTimeout(window.drawMovementPath, 100);
+}
+
+window.drawMovementPath = () => {
+    const wrapper = document.getElementById('sowing-plan-inner-wrapper');
+    if(!wrapper) return;
+    
+    let svg = document.getElementById('movement-path-svg');
+    if (svg) svg.remove();
+
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.id = 'movement-path-svg';
+    svg.style.position = 'absolute'; svg.style.top = '0'; svg.style.left = '0'; svg.style.width = '100%'; svg.style.height = '100%'; svg.style.pointerEvents = 'none'; svg.style.zIndex = '5';
+
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+    marker.setAttribute('id', 'arrowhead'); marker.setAttribute('markerWidth', '6'); marker.setAttribute('markerHeight', '5'); marker.setAttribute('refX', '6'); marker.setAttribute('refY', '2.5'); marker.setAttribute('orient', 'auto-start-reverse');
+    const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    polygon.setAttribute('points', '0 0, 6 2.5, 0 5'); polygon.setAttribute('fill', 'rgba(211, 84, 0, 0.85)'); 
+    marker.appendChild(polygon); defs.appendChild(marker); svg.appendChild(defs);
+
+    if (currentPlotOrder.length === 0) generatePlotOrder();
+
+    let prevX = null, prevY = null;
+    currentPlotOrder.forEach(code => {
+        const cell = wrapper.querySelector(`td[data-code="${code}"]`);
+        if (cell) {
+            const cellX = cell.offsetLeft + (cell.offsetWidth / 2);
+            const cellY = cell.offsetTop + (cell.offsetHeight / 2);
+            
+            if (prevX !== null && prevY !== null) {
+                const dx = cellX - prevX, dy = cellY - prevY, len = Math.sqrt(dx*dx + dy*dy);
+                if (len > 15) {
+                    const startX = prevX + (dx/len)*10, startY = prevY + (dy/len)*10, endX = cellX - (dx/len)*12, endY = cellY - (dy/len)*12;
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', startX); line.setAttribute('y1', startY); line.setAttribute('x2', endX); line.setAttribute('y2', endY); line.setAttribute('stroke', 'rgba(211, 84, 0, 0.85)'); line.setAttribute('stroke-width', '2'); line.setAttribute('marker-end', 'url(#arrowhead)');
+                    svg.appendChild(line);
+                }
+            }
+            prevX = cellX; prevY = cellY;
+        }
+    });
+    wrapper.appendChild(svg);
+};
+
+
+// ==========================================
+// OBSERVATION & PHOTO LOGIC
+// ==========================================
+
+function addCommentToMemory(text) {
+    let freqComments = JSON.parse(localStorage.getItem('freqComments') || "{}");
+    const cleanText = text.trim();
+    if(cleanText.length > 2) {
+        freqComments[cleanText] = (freqComments[cleanText] || 0) + 1;
+        localStorage.setItem('freqComments', JSON.stringify(freqComments));
+        renderFreqComments();
+    }
+}
+
+function renderFreqComments() {
+    const container = document.getElementById('freq-comments-container');
+    if(!container) return;
+    let freqComments = JSON.parse(localStorage.getItem('freqComments') || "{}");
+    let sorted = Object.keys(freqComments).sort((a,b) => freqComments[b] - freqComments[a]).slice(0, 5);
+    container.innerHTML = sorted.map(c => `<span class="chip" onclick="insertFreqComment('${c.replace(/'/g, "\\'")}')">${c}</span>`).join('');
+}
+
+window.insertFreqComment = (txt) => {
+    const obs = document.getElementById('obs');
+    obs.value = obs.value ? obs.value + " - " + txt : txt;
+    document.getElementById('clear-obs').style.display = 'block';
+};
+
+// Fonction pour l'enregistrement (avec ou sans photo passée en paramètre)
+function enregistrerObservation(moveDir, photoFilename = null) {
+    if (isSaving && !photoFilename) return;
+    if (!photoFilename) { isSaving = true; setTimeout(() => { isSaving = false; }, 500); }
+
+    if (!parcelleValideeCode) return alert(getT("alert-valider-parcelle"));
+
+    playSuccessSound();
+
+    let paramVariete = document.getElementById('param-variete').value.trim();
+    let paramType = document.getElementById('param-type').value;
+
+    let currentPlot = varieteData.find(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') === parcelleValideeCode && p.Essai === currentEssai);
+    if(currentPlot) {
+        let updated = false;
+        if(paramVariete && paramVariete !== currentPlot.variete) { currentPlot.variete = paramVariete; updated = true; }
+        if(paramType !== currentPlot.Type) { currentPlot.Type = paramType; updated = true; }
+        if(updated) saveVarieteDataLocal();
+    }
+
+    const obsText = document.getElementById('obs').value;
+    if(obsText) addCommentToMemory(obsText);
+
+    let fallbackVariete = document.getElementById('variete-text').textContent.split(':')[1];
+    if (fallbackVariete) { fallbackVariete = fallbackVariete.split('(')[0].trim(); } 
+    else { fallbackVariete = "Inconnue"; }
+
+    // On vérifie s'il existe déjà une observation pour cette parcelle aujourd'hui
+    let existingObsIndex = appObservations.findIndex(o => 
+        o.Parcelle === parcelleValideeCode && 
+        o.ESSAI === currentEssai && 
+        o.Date === document.getElementById('custom-date').value
+    );
+
+    let obs;
+    if (existingObsIndex !== -1) {
+        // On met à jour l'existante
+        obs = appObservations[existingObsIndex];
+        obs.Heure = document.getElementById('custom-time').value;
+        obs.Observations = obsText ? (obs.Observations ? obs.Observations + " | " + obsText : obsText) : obs.Observations;
+        if (photoFilename) {
+            obs.Photos = obs.Photos ? obs.Photos + ", " + photoFilename : photoFilename;
+        }
+        // Replacer au début
+        appObservations.splice(existingObsIndex, 1);
+        appObservations.unshift(obs);
+    } else {
+        // On crée une nouvelle
+        obs = {
+            id: Date.now(), Notateur: document.getElementById('type-notation-session').value, ESSAI: currentEssai, Parcelle: parcelleValideeCode,
+            Variete: paramVariete || fallbackVariete,
+            Date: document.getElementById('custom-date').value, Heure: document.getElementById('custom-time').value,
+            Meteo: document.getElementById('meteo-select').value, Rep: document.getElementById('rep').value, 
+            Observations: obsText, Photos: photoFilename || ""
+        };
+        appObservations.unshift(obs); 
+    }
+
+    localStorage.setItem('observations_photo_v1', JSON.stringify(appObservations)); 
+    renderRecapTable();
+    
+    // On efface le champ observation après sauvegarde manuelle ou auto via photo
+    document.getElementById('obs').value = "";
+    document.getElementById('clear-obs').style.display = "none";
+
+    // Déplacement automatique (sauf si on vient d'ajouter juste une photo sur place)
+    if(moveDir !== 0) {
+        handleNavigate(moveDir); 
+        parcelleValideeCode = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0'); 
+        updateUIForSelectedPlot(selectedPlotCodeForNavigation); 
+        document.getElementById('rep').value = 'A';
+    }
+    
+    updateProgressBar();
+    renderMiniPlan(); 
+}
+
+function renderRecapTable() {
+    const tbody = document.querySelector('#recap-table tbody'); if(!tbody) return;
+    tbody.innerHTML = appObservations.map(o => `<tr><td>${o.ESSAI}</td><td>${o.Parcelle}</td><td>${o.Rep}</td><td style="font-size:0.8em; word-break:break-all;">${o.Photos||'-'}</td><td><button onclick="delObs(${o.id})" class="btn-danger" style="margin:0;padding:2px 6px; font-weight:bold;">X</button></td></tr>`).join('');
+}
+
+window.delObs = (id) => { if(confirm("Supprimer cette observation ?")) { appObservations = appObservations.filter(o => o.id !== id); localStorage.setItem('observations_photo_v1', JSON.stringify(appObservations)); renderRecapTable(); updateProgressBar(); } };
+
+window.openTab = (e,n) => { 
+    document.querySelectorAll('.tabcontent').forEach(x=>x.style.display='none'); 
+    document.querySelectorAll('.tablink').forEach(x=>x.classList.remove('active')); 
+    document.getElementById(n).style.display='block'; 
+    if(e) e.currentTarget.classList.add('active'); 
+}
+
+function loadLocalObservations() { appObservations = JSON.parse(localStorage.getItem('observations_photo_v1') || "[]"); renderRecapTable(); renderFreqComments();}
+
+function generateNotesCSVString() {
+    if(!appObservations.length) return null;
+    const finalKeys = ["Notateur", "ESSAI", "Parcelle", "Variete", "Date", "Heure", "Meteo", "Rep", "Photos", "Observations"];
+    let csv = finalKeys.join(";") + "\n";
+    appObservations.forEach(o => { csv += finalKeys.map(k => o[k] === undefined ? "" : o[k]).join(";") + "\n"; });
+    return csv;
+}
+
+function telechargerCSV() {
+    const csv = generateNotesCSVString();
+    if(!csv) return alert("Rien à exporter.");
+    
+    const essai = currentEssai || "Essai"; 
+    const date = document.getElementById('custom-date').value || new Date().toISOString().split('T')[0]; 
+    const notateur = document.getElementById('type-notation-session').value || "Notateur"; 
+    const sanitize = (s) => s.replace(/[^a-z0-9]/gi, '_'); 
+    const filename = `Photos_${sanitize(essai)}_${sanitize(date)}_${sanitize(notateur)}.csv`;
+    
+    const a = document.createElement('a'); 
+    a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); 
+    a.download = filename; 
+    a.click();
+}
+
+async function partagerCSV() {
+    const csv = generateNotesCSVString();
+    if(!csv) return alert("Rien à exporter.");
+
+    // IMPORTANT: Explication pour les photos
+    alert("📌 NOTE IMPORTANTE :\nLes photos ont été enregistrées directement dans la galerie ou le dossier Téléchargements de votre appareil au fur et à mesure.\n\nPour les envoyer à vos collègues, joignez-les depuis votre galerie en même temps que ce fichier CSV !");
+
+    telechargerCSV(); // Sauvegarde locale par sécurité
+
+    const essai = currentEssai || "Essai"; 
+    const date = document.getElementById('custom-date').value || new Date().toISOString().split('T')[0]; 
+    const notateur = document.getElementById('type-notation-session').value || "Notateur"; 
+    const sanitize = (s) => s.replace(/[^a-z0-9]/gi, '_'); 
+    const filename = `Photos_${sanitize(essai)}_${sanitize(date)}_${sanitize(notateur)}.csv`;
+
+    const file = new File([new Blob([csv], {type: 'text/csv;charset=utf-8'})], filename, { type: 'text/csv' });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+            await navigator.share({
+                files: [file],
+                title: 'Export Photos - ' + essai,
+                text: 'Voici les données exportées. N\'oubliez pas de joindre les photos depuis votre pellicule !'
+            });
+        } catch (error) {}
+    }
+
+    setTimeout(() => {
+        if (confirm("Le fichier a été exporté. Voulez-vous purger (effacer) les notes de l'appareil ?")) {
+            appObservations = [];
+            localStorage.removeItem('observations_photo_v1');
+            renderRecapTable();
+            updateProgressBar();
+            alert("Les données ont été purgées avec succès.");
+        }
+    }, 1500); 
+}
+
+async function telechargerPlanCSV() {
+    if(!currentEssai) return alert(getT("alert-choix-essai"));
+    const plots = varieteData.filter(p => p.Essai === currentEssai);
+    if(plots.length === 0) return alert("Pas de plan.");
+
+    const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type"];
+    let csv = cols.join(";") + "\n";
+    plots.forEach(p => { csv += cols.map(c => p[c] === undefined ? "" : p[c]).join(";") + "\n"; });
+    
+    const sanitize = (s) => s.replace(/[^a-z0-9]/gi, '_'); 
+    const filename = `Plan_${sanitize(currentEssai)}.csv`;
+    
+    const a = document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download=filename; a.click();
+}
+
+function telechargerSauvegardeGlobale() {
+    if (!varieteData || varieteData.length === 0) return false;
+    const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type"];
+    let csv = cols.join(";") + "\n";
+    varieteData.forEach(p => { csv += cols.map(c => p[c] === undefined ? "" : p[c]).join(";") + "\n"; });
+    
+    const date = document.getElementById('custom-date').value || new Date().toISOString().split('T')[0]; 
+    const filename = `Sauvegarde_Globale_Essais_${date}.csv`;
+    const a = document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download=filename; a.click();
+    return true;
+}
+
+window.toggleDictation = () => {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert("La reconnaissance vocale n'est pas supportée."); return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    const btn = document.getElementById('mic-btn');
+    const obsArea = document.getElementById('obs');
+
+    const langMap = { 'fr': 'fr-FR', 'en': 'en-US', 'es': 'es-ES' };
+    const currentLang = document.getElementById('lang-select').value;
+    recognition.lang = langMap[currentLang] || 'fr-FR';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.start();
+    btn.classList.add('listening');
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        const currentText = obsArea.value;
+        obsArea.value = currentText ? currentText + " " + transcript : transcript;
+        document.getElementById('clear-obs').style.display = 'block';
+    };
+
+    recognition.onspeechend = () => { recognition.stop(); btn.classList.remove('listening'); };
+    recognition.onerror = (event) => { btn.classList.remove('listening'); };
+};
+
+// ==========================================
+// PHOTO MODULE SPECIFIC LOGIC
+// ==========================================
+
+window.triggerPhoto = () => {
+    if (!parcelleValideeCode) return alert("Veuillez valider une parcelle d'abord.");
+    document.getElementById('file-input-main').click();
+};
+
+window.handlePhotoUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Récupération des éléments pour construire le nom
+    const prefix = document.getElementById('photo-prefix').value || "PH";
+    const numInput = document.getElementById('photo-num');
+    const num = String(numInput.value).padStart(3, '0'); 
+    
+    let currentPlot = varieteData.find(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') === parcelleValideeCode && p.Essai === currentEssai);
+    
+    let pVar = currentPlot ? currentPlot.variete : "Inconnue";
+    let px = (currentPlot && currentPlot.Plan_X) ? currentPlot.Plan_X : "X";
+    let py = (currentPlot && currentPlot.Plan_Y) ? currentPlot.Plan_Y : "Y";
+    let rep = document.getElementById('rep').value || "A";
+
+    const sanitize = (s) => String(s).replace(/[^a-zA-Z0-9-]/g, '_');
+
+    // Format demandé : PH001(le code écrit dans les blocs).Variete.Essai.x.y.rep
+    const baseName = `${prefix}${num}(${parcelleValideeCode}).${sanitize(pVar)}.${sanitize(currentEssai)}.${px}.${py}.${rep}`;
+    const filename = `${baseName}.jpg`;
+
+    // Déclenchement du téléchargement dans la galerie
+    const blobUrl = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Incrémenter le numéro pour la prochaine photo
+    numInput.value++;
+
+    // Enregistrer la donnée (Dir 0 = on reste sur la même parcelle pour prendre éventuellement une 2eme photo)
+    enregistrerObservation(0, filename); 
+    
+    // Feedback visuel court
+    const btn = document.querySelector('.photo-module-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "✅ PHOTO ENREGISTRÉE !";
+    btn.style.backgroundColor = "#27ae60";
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.backgroundColor = "#2980b9";
+    }, 2000);
+};
+
+</script>
+</body>
+</html>
