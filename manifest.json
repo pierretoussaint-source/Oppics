@@ -1,6 +1,6 @@
 {
-  "name": "Newtea Photo - Notation d'Essais",
-  "short_name": "Newtea Photo",
+  "name": "Oppics",
+  "short_name": "Oppics",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f8f9fa",
