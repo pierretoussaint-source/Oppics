@@ -1,4 +1,4 @@
-const CACHE_NAME = 'Oppics';
+const CACHE_NAME = 'Oppics-v1';
 
 // Liste des fichiers essentiels pour le mode hors-ligne
 const urlsToCache = [
