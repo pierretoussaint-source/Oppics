@@ -6,10 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="icon" href="data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.plant-stem-icon { stroke: var(--theme-secondary-color, %234CAF50); stroke-width: 1.5; stroke-linecap: round; }.plant-leaf-icon { fill: var(--theme-secondary-color, %2366BB6A); }.n-stylized-icon { fill: var(--theme-heading-color, %23227A49); }.icon-background { fill: var(--theme-card-background-color, white); stroke: var(--theme-secondary-color, %23DDD); stroke-width:1; }%3C/style%3E%3Ccircle class='icon-background' cx='40' cy='40' r='38'/%3E%3Cpath d='M30 55 L30 25 M30 25 L50 55 M50 55 L50 25' stroke='var(--theme-heading-color, %23227A49)' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cg transform='translate(40, 15) scale(0.45)'%3E%3Cline class='plant-stem-icon' x1='0' y1='10' x2='0' y2='-3'/%3E%3Cellipse cx='0' cy='-8' rx='5' ry='7' fill='var(--theme-sorgho-primary-color, %23C0392B)'/%3E%3C/g%3E%3Cg transform='translate(18, 38) scale(0.45)'%3E%3Cline class='plant-stem-icon' x1='0' y1='12' x2='0' y2='-3'/%3E%3Ccircle cx='0' cy='-8' r='5' fill='var(--theme-primary-color, %23FFD700)'/%3E%3Ccircle cx='0' cy='-8' r='2' fill='var(--theme-secondary-color, %23A0522D)'/%3E%3C/g%3E%3Cg transform='translate(62, 38) scale(0.45)'%3E%3Crect class='plant-leaf-icon' x='-2' y='-10' width='4' height='18' rx='1'/%3E%3Cpath stroke='var(--theme-primary-color, %23E6B800)' stroke-width='1.5' fill='none' d='M-1.5,-10 Q0,-14 1.5,-10 M0,-10 Q-2.5,-13 -3,-9 M0,-10 Q2.5,-13 3,-9'/%3E%3C/g%3E%3Cg transform='translate(25, 60) scale(0.4)'%3E%3Cline class='plant-stem-icon' x1='0' y1='10' x2='0' y2='-1'/%3E%3Ccircle cx='0' cy='-3' r='2' fill='var(--theme-colza-primary-color, %23FFEB3B)'/%3E%3Ccircle cx='-3' cy='-5' r='2' fill='var(--theme-colza-primary-color, %23FFEB3B)'/%3E%3Ccircle cx='3' cy='-5' r='2' fill='var(--theme-colza-primary-color, %23FFEB3B)'/%3E%3C/g%3E%3Cg transform='translate(55, 60) scale(0.4)'%3E%3Cpath class='plant-leaf-icon' d='M0,12 Q-8,3 -4,-4 Q0,-8 4,-4 Q8,3 0,12 Z'/%3E%3Ccircle cx='-2' cy='-1' r='1' fill='var(--theme-soja-primary-color, %23E1BEE7)'/%3E%3Ccircle cx='2' cy='-1' r='1' fill='var(--theme-soja-primary-color, %23E1BEE7)'/%3E%3C/g%3E%3C/svg%3E">
     <title>Oppics</title>
+    <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#227A49">
-    <link rel="manifest" href="manifest.json">
+    <script>
+    if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.protocol === 'http:')) {
+        window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(() => console.log('Service Worker Enregistré avec succès.'))
+            .catch(err => console.error('Erreur Service Worker', err));
+        });
+    } else {
+        console.log('Service Worker désactivé (protocole non supporté sur cet environnement).');
+    }
+    </script>
     <style>
         /* Remplacement du zoom par une taille de police racine réduite pour iOS */
         html { font-size: 13px; overflow-x: hidden; }
@@ -189,9 +200,8 @@
     </svg>
 </div>
 
-<h1 style="text-align:center; margin-top:0;">Newtea Photo</h1>
+<h1 style="text-align:center; margin-top:0;">Oppics</h1>
 
-<!-- ÉCRAN D'ACCUEIL : SÉLECTION / CRÉATION / IMPORT -->
 <div id="session-setup">
     <label for="type-notation-session" data-i18n="notateur">Votre Nom / Notateur :</label>
     <input type="text" id="type-notation-session" data-i18n-placeholder="notateur-placeholder" placeholder="Nom du notateur...">
@@ -237,14 +247,12 @@
     </div>
 </div>
 
-<!-- APPLICATION PRINCIPALE -->
 <div id="app-container" style="display:none;">
     <div class="tabs">
         <button class="tablink active" onclick="openTab(event, 'Note')" id="defaultOpen" data-i18n="tab-Note">Appareil Photo</button>
         <button class="tablink" onclick="openTab(event, 'Configuration')" data-i18n="tab-Configuration">Configuration</button>
     </div>
 
-    <!-- ONGLET PRINCIPAL (PHOTO) -->
     <div id="Note" class="tabcontent" style="display:block;">
         <div id="app-content">
             <div class="sidebar">
@@ -267,8 +275,8 @@
                             </select>
                         </div>
                     </div>
-                    <div id="dynamic-digit-buttons"></div>
-                    <div id="mini-plan-container" style="display:none;"></div>
+                    <div id="dynamic-digit-buttons" style="display:none;"></div>
+                    <div id="mini-plan-container"></div>
                 </div>
 
                 <div class="parcelle-navigation" style="display: flex; gap: 5px; justify-content: space-around; margin-top: 15px;">
@@ -299,7 +307,6 @@
                 
                 <div id="central-notations-container" style="display:block; margin-top:10px;">
                     
-                    <!-- MENU : PARAMETRES PARCELLE -->
                     <div id="not-param" class="notation-group-container">
                         <h4 style="margin-bottom: 10px;" data-i18n="h4-param-parc">Paramètres de la Parcelle</h4>
                         <div style="display:flex; flex-direction:column; gap:10px;">
@@ -319,7 +326,6 @@
                         </div>
                     </div>
 
-                    <!-- MODULE PHOTO CENTRAL -->
                     <div class="notation-group-container" style="border: 2px solid #2980b9; background-color: #eaf2f8;">
                         <h4 style="color: #2980b9; margin-bottom:10px; text-align:center;">📷 Prise de Photo</h4>
                         <div style="display:flex; align-items:center; gap:5px; width:100%; justify-content:center; margin-bottom: 15px;">
@@ -334,7 +340,7 @@
                             <span>📷</span> PRENDRE LA PHOTO
                         </button>
                         <input type="file" id="file-input-main" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoUpload(event)">
-                        <p style="text-align:center; font-size:0.8em; color:#666; margin-top:8px;">L'enregistrement de la parcelle est automatique après la photo.</p>
+                        <p style="text-align:center; font-size:0.8em; color:#666; margin-top:8px;">La ligne est enregistrée automatiquement après la photo.</p>
                     </div>
 
                 </div>
@@ -377,7 +383,6 @@
         </div>
     </div>
 
-    <!-- ONGLET CONFIGURATION -->
     <div id="Configuration" class="tabcontent">
         <label data-i18n="choix-langue">Langue :</label>
         <select id="lang-select">
@@ -397,8 +402,8 @@
         <div style="display:flex; align-items:center; margin-top:15px; margin-bottom:15px;">
             <label style="width:auto; margin:0 10px 0 0;">Sélection parcelle :</label>
             <select id="selection-mode-toggle" onchange="toggleSelectionMode()" style="margin:0;">
-                <option value="digits">Blocs de numéros (1-9)</option>
                 <option value="miniplan">Mini-Plan (Aperçu)</option>
+                <option value="digits">Blocs de numéros (1-9)</option>
             </select>
         </div>
         
@@ -433,7 +438,6 @@
     </div>
 </div>
 
-<!-- MODAL GPS -->
 <div id="gpsChoiceModal" class="modal">
     <div class="modal-content" style="max-width: 400px; text-align: center;">
         <h3 data-i18n="h3-gps-options">Options GPS</h3>
@@ -444,7 +448,6 @@
     </div>
 </div>
 
-<!-- SOWING PLAN MODAL -->
 <div id="sowingPlanModal" class="modal" style="z-index: 100000;">
     <div class="modal-content"> 
         <span class="close-button" id="closeSowingPlanModal" style="float:right; font-size:24px; cursor:pointer;">×</span>
@@ -497,7 +500,7 @@
 // ==========================================
 const translations = {
 fr: {
-    "title": "Newtea Photo", "choix-essai": "Choix de l'essai :", "notateur": "Votre Nom / Notateur :", "notateur-placeholder": "Nom...", "confirmer-noter": "Confirmer l'essai",
+    "title": "Oppics", "choix-essai": "Choix de l'essai :", "notateur": "Votre Nom / Notateur :", "notateur-placeholder": "Nom...", "confirmer-noter": "Confirmer l'essai",
     "tab-Note": "Appareil Photo", "tab-Configuration": "Configuration", "num-parcelle": "Numéro de parcelle", "mode": "Mode :", "prec": "← Préc.", "valider": "Valider Parcelle",
     "suiv": "Suiv. →", "lignee": "Nom / Variété :", "plan-semis": "Plan de Semis", "rep": "Répétition :", 
     "observations": "Observations :",
@@ -519,7 +522,7 @@ fr: {
     "h3-gps-options": "Options GPS", "btn-gps-aller": "🗺️ Aller vers cet essai", "btn-gps-definir": "📍 Définir la position ici", "gps-status-none": "Aucune position GPS.", "gps-status-ok": "Position enregistrée : "
 },
 en: {
-    "title": "Newtea Photo", "choix-essai": "Trial Choice:", "notateur": "Your Name:", "notateur-placeholder": "Name...", "confirmer-noter": "Confirm Trial",
+    "title": "Oppics", "choix-essai": "Trial Choice:", "notateur": "Your Name:", "notateur-placeholder": "Name...", "confirmer-noter": "Confirm Trial",
     "tab-Note": "Camera", "tab-Configuration": "Setup", "num-parcelle": "Plot Number", "mode": "Mode:", "prec": "← Prev.", "valider": "Validate Plot",
     "suiv": "Next →", "lignee": "Name / Variety:", "plan-semis": "Planting Plan", "rep": "Repetition:", 
     "observations": "Observations:",
@@ -779,7 +782,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('dark-mode');
     }
 
-    const savedSelectionMode = localStorage.getItem('newtea_selection_mode') || 'digits';
+    // Le miniplan est chargé par défaut
+    const savedSelectionMode = localStorage.getItem('newtea_selection_mode') || 'miniplan';
     const modeSelect = document.getElementById('selection-mode-toggle');
     if (modeSelect) modeSelect.value = savedSelectionMode;
     toggleSelectionMode();
@@ -1285,50 +1289,33 @@ function enregistrerObservation(moveDir, photoFilename = null) {
     if (fallbackVariete) { fallbackVariete = fallbackVariete.split('(')[0].trim(); } 
     else { fallbackVariete = "Inconnue"; }
 
-    // On vérifie s'il existe déjà une observation pour cette parcelle aujourd'hui
-    let existingObsIndex = appObservations.findIndex(o => 
-        o.Parcelle === parcelleValideeCode && 
-        o.ESSAI === currentEssai && 
-        o.Date === document.getElementById('custom-date').value
-    );
-
-    let obs;
-    if (existingObsIndex !== -1) {
-        // On met à jour l'existante
-        obs = appObservations[existingObsIndex];
-        obs.Heure = document.getElementById('custom-time').value;
-        obs.Observations = obsText ? (obs.Observations ? obs.Observations + " | " + obsText : obsText) : obs.Observations;
-        if (photoFilename) {
-            obs.Photos = obs.Photos ? obs.Photos + ", " + photoFilename : photoFilename;
-        }
-        // Replacer au début
-        appObservations.splice(existingObsIndex, 1);
-        appObservations.unshift(obs);
-    } else {
-        // On crée une nouvelle
-        obs = {
-            id: Date.now(), Notateur: document.getElementById('type-notation-session').value, ESSAI: currentEssai, Parcelle: parcelleValideeCode,
-            Variete: paramVariete || fallbackVariete,
-            Date: document.getElementById('custom-date').value, Heure: document.getElementById('custom-time').value,
-            Meteo: document.getElementById('meteo-select').value, Rep: document.getElementById('rep').value, 
-            Observations: obsText, Photos: photoFilename || ""
-        };
-        appObservations.unshift(obs); 
-    }
-
+    // Création d'une nouvelle ligne d'observation à chaque fois
+    let obs = {
+        id: Date.now(), Notateur: document.getElementById('type-notation-session').value, ESSAI: currentEssai, Parcelle: parcelleValideeCode,
+        Variete: paramVariete || fallbackVariete,
+        Date: document.getElementById('custom-date').value, Heure: document.getElementById('custom-time').value,
+        Meteo: document.getElementById('meteo-select').value, Rep: document.getElementById('rep').value, 
+        Observations: obsText, Photos: photoFilename || ""
+    };
+    
+    appObservations.unshift(obs); 
     localStorage.setItem('observations_photo_v1', JSON.stringify(appObservations)); 
     renderRecapTable();
     
-    // On efface le champ observation après sauvegarde manuelle ou auto via photo
+    // On efface le champ observation après sauvegarde
     document.getElementById('obs').value = "";
     document.getElementById('clear-obs').style.display = "none";
 
-    // Déplacement automatique (sauf si on vient d'ajouter juste une photo sur place)
+    // Déplacement automatique (si moveDir !== 0) ou Incrémentation de la REP (si on reste sur la parcelle)
     if(moveDir !== 0) {
         handleNavigate(moveDir); 
         parcelleValideeCode = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0'); 
         updateUIForSelectedPlot(selectedPlotCodeForNavigation); 
         document.getElementById('rep').value = 'A';
+    } else {
+        // Incrémente la lettre de la REP si on reste sur la même parcelle (ex: A -> B -> C)
+        let r = document.getElementById('rep');
+        r.value = String.fromCharCode(r.value.toUpperCase().charCodeAt(0) + 1);
     }
     
     updateProgressBar();
@@ -1367,7 +1354,8 @@ function telechargerCSV() {
     const date = document.getElementById('custom-date').value || new Date().toISOString().split('T')[0]; 
     const notateur = document.getElementById('type-notation-session').value || "Notateur"; 
     const sanitize = (s) => s.replace(/[^a-z0-9]/gi, '_'); 
-    const filename = `Photos_${sanitize(essai)}_${sanitize(date)}_${sanitize(notateur)}.csv`;
+    // Format : Notateur.Date.Essai.csv
+    const filename = `${sanitize(notateur)}.${sanitize(date)}.${sanitize(essai)}.csv`;
     
     const a = document.createElement('a'); 
     a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); 
@@ -1388,7 +1376,8 @@ async function partagerCSV() {
     const date = document.getElementById('custom-date').value || new Date().toISOString().split('T')[0]; 
     const notateur = document.getElementById('type-notation-session').value || "Notateur"; 
     const sanitize = (s) => s.replace(/[^a-z0-9]/gi, '_'); 
-    const filename = `Photos_${sanitize(essai)}_${sanitize(date)}_${sanitize(notateur)}.csv`;
+    // Format : Notateur.Date.Essai.csv
+    const filename = `${sanitize(notateur)}.${sanitize(date)}.${sanitize(essai)}.csv`;
 
     const file = new File([new Blob([csv], {type: 'text/csv;charset=utf-8'})], filename, { type: 'text/csv' });
 
@@ -1496,8 +1485,8 @@ window.handlePhotoUpload = (event) => {
 
     const sanitize = (s) => String(s).replace(/[^a-zA-Z0-9-]/g, '_');
 
-    // Format demandé : PH001(le code écrit dans les blocs).Variete.Essai.x.y.rep
-    const baseName = `${prefix}${num}(${parcelleValideeCode}).${sanitize(pVar)}.${sanitize(currentEssai)}.${px}.${py}.${rep}`;
+    // Format demandé : PH001.Variete.Essai.x.y.rep (sans le code entre parenthèse)
+    const baseName = `${prefix}${num}.${sanitize(pVar)}.${sanitize(currentEssai)}.${px}.${py}.${rep}`;
     const filename = `${baseName}.jpg`;
 
     // Déclenchement du téléchargement dans la galerie
@@ -1512,7 +1501,7 @@ window.handlePhotoUpload = (event) => {
     // Incrémenter le numéro pour la prochaine photo
     numInput.value++;
 
-    // Enregistrer la donnée (Dir 0 = on reste sur la même parcelle pour prendre éventuellement une 2eme photo)
+    // Enregistrer la donnée (Dir 0 = on reste sur la même parcelle, ce qui va incrémenter la REP automatiquement)
     enregistrerObservation(0, filename); 
     
     // Feedback visuel court
