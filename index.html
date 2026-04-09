@@ -424,6 +424,13 @@
         </select>
         
         <hr>
+        <h3 style="color:#2980b9;">☁️ Dépôt en ligne</h3>
+        <button onclick="window.open('https://drive.google.com/drive/folders/1tNnXwiHhimUDoIVs_r6C2ughYJm8soCA?usp=sharing', '_blank')" class="btn-primary btn-block" style="background-color: #27ae60; font-size: 1.1em; padding: 15px;">
+            📁 Accéder au Drive de dépôt
+        </button>
+        <p style="font-size:0.8em; color:#666; text-align:center;">Ouvre le dossier Google Drive partagé pour y glisser vos photos et le CSV exporté.</p>
+        
+        <hr>
         <label style="color:#d35400; font-weight:bold;" data-i18n="label-import">Overlay Interactif (Session uniquement) :</label>
         <input type="file" id="import-external-csv" accept=".csv" style="border: 1px solid #d35400;">
         <p style="font-size:0.8em; color:#666;" data-i18n="desc-import">Superpose les données sur le plan. Ne modifie pas la base des essais.</p>
@@ -1368,7 +1375,7 @@ async function partagerCSV() {
     if(!csv) return alert("Rien à exporter.");
 
     // IMPORTANT: Explication pour les photos
-    alert("📌 NOTE IMPORTANTE :\nLes photos ont été enregistrées directement dans la galerie ou le dossier Téléchargements de votre appareil au fur et à mesure.\n\nPour les envoyer à vos collègues, joignez-les depuis votre galerie en même temps que ce fichier CSV !");
+    alert("📌 NOTE IMPORTANTE :\nLes photos ont été enregistrées directement dans la galerie ou le dossier Téléchargements de votre appareil.\n\nN'oubliez pas d'ouvrir le dossier Drive partagé pour y glisser les photos en même temps que le CSV !");
 
     telechargerCSV(); // Sauvegarde locale par sécurité
 
