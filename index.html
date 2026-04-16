@@ -10,6 +10,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#227A49">
+    
+    <!-- Importation du fichier de traduction externe -->
+    <script src="./translations.js"></script>
+
     <script>
     if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.protocol === 'http:')) {
         window.addEventListener('load', () => {
@@ -58,7 +62,6 @@
         body.dark-mode .modal-content { background-color: #1e1e1e; color: #e0e0e0; }
         body.dark-mode .interactive-controls { background-color: #2c3e2c; border-color: #3d5a3d;}
         body.dark-mode .interactive-val { background: rgba(0,0,0,0.6); color: #fff; border-color:#555;}
-        body.dark-mode .sticky-x, body.dark-mode .sticky-y, body.dark-mode .sticky-corner { background-color: #333 !important; color:#fff;}
         body.dark-mode .notation-group-container { background-color: #242424; border-color:#444;}
 
         .theme-mais { --theme-primary-color: #f1c40f; --theme-secondary-color: #27ae60; --theme-text-on-primary: #333; --theme-heading-color: #27ae60; --theme-button-hover-bg: #e6b800; --theme-tab-active-bg: #f1c40f; --theme-tab-active-text: #333; --theme-gps-button-bg: #27ae60; }
@@ -126,10 +129,6 @@
         .notation-group-container { border: 1px solid var(--theme-input-border-color); padding: 15px; border-radius: 8px; margin-bottom: 15px; background-color: var(--theme-card-background-color); transition: all 0.3s ease; }
         
         #sowing-plan-grid-container { max-height: 60vh; overflow: auto; border: 1px solid var(--theme-input-border-color); position: relative; }
-        #sowing-plan-grid-container table { border-collapse: separate; border-spacing: 0; }
-        .sticky-x { position: sticky; top: 0; background: #eee; z-index: 10; font-weight: bold; border-bottom: 2px solid #999 !important; }
-        .sticky-y { position: sticky; left: 0; background: #eee; z-index: 9; font-weight: bold; border-right: 2px solid #999 !important; }
-        .sticky-corner { position: sticky; top: 0; left: 0; z-index: 11; background: #ddd; }
         
         .type-M { background-color: #e3f2fd; color:#333; } 
         .type-F { background-color: #e8f5e9; color:#333; } 
@@ -326,22 +325,12 @@
                         </div>
                     </div>
 
-                    <div class="notation-group-container" style="border: 2px solid #2980b9; background-color: #eaf2f8;">
-                        <h4 style="color: #2980b9; margin-bottom:10px; text-align:center;">📷 Prise de Photo</h4>
-                        <div style="display:flex; align-items:center; gap:5px; width:100%; justify-content:center; margin-bottom: 15px;">
-                            <label style="width:auto; margin:0;">Préfixe:</label>
-                            <input type="text" id="photo-prefix" size="5" placeholder="PH" value="PH" style="width:60px !important; margin:0;">
-                            <label style="width:auto; margin:0; margin-left:10px;">Num:</label>
-                            <input type="number" id="photo-num" value="1" min="1" style="width:80px !important; margin:0;">
-                            <button class="btn-secondary cube-btn" style="width:35px !important; height:35px !important; margin-left:5px;" onclick="document.getElementById('photo-num').value = Math.max(1, document.getElementById('photo-num').value - 1)">-</button>
-                            <button class="btn-secondary cube-btn" style="width:35px !important; height:35px !important; margin-left:5px;" onclick="document.getElementById('photo-num').value++">+</button>
-                        </div>
-                        <button class="photo-module-btn" onclick="triggerPhoto()">
-                            <span>📷</span> PRENDRE LA PHOTO
-                        </button>
-                        <input type="file" id="file-input-main" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoUpload(event)">
-                        <p style="text-align:center; font-size:0.8em; color:#666; margin-top:8px;">La ligne est enregistrée automatiquement après la photo.</p>
-                    </div>
+                    <!-- Conteneur des modules photos indépendants -->
+                    <div id="photo-modules-container"></div>
+                    
+                    <button id="add-photo-module-btn" style="width:100%; margin-top:0px; margin-bottom:15px; border:2px dashed #2980b9; background:transparent; color:#2980b9; font-weight:bold; cursor:pointer; padding:10px; border-radius:8px;">
+                        + Ajouter une boîte photo
+                    </button>
 
                 </div>
                 
@@ -389,6 +378,9 @@
             <option value="fr">Français</option>
             <option value="en">English</option>
             <option value="es">Español</option>
+            <option value="pl">Polski</option>
+            <option value="ro">Română</option>
+            <option value="uk">Українська</option>
         </select>
         
         <div style="display:flex; align-items:center; margin-top:15px; margin-bottom:15px;">
@@ -502,70 +494,23 @@
 
 
 <script>
-// ==========================================
-// TRANSLATIONS (Embedded)
-// ==========================================
-const translations = {
-fr: {
-    "title": "Oppics", "choix-essai": "Choix de l'essai :", "notateur": "Votre Nom / Notateur :", "notateur-placeholder": "Nom...", "confirmer-noter": "Confirmer l'essai",
-    "tab-Note": "Appareil Photo", "tab-Configuration": "Configuration", "num-parcelle": "Numéro de parcelle", "mode": "Mode :", "prec": "← Préc.", "valider": "Valider Parcelle",
-    "suiv": "Suiv. →", "lignee": "Nom / Variété :", "plan-semis": "Plan de Semis", "rep": "Répétition :", 
-    "observations": "Observations :",
-    "derniers-enregistrements": "Derniers enregistrements", "th-essai": "Essai", "th-parc": "Parc.", "th-rep": "Rép.", "th-act": "Act.",
-    "choix-langue": "Langue :", "changer-essai": "Retour Menu / Changer d'essai", "reset-donnees": "⚠️ Reset Données (Purger les Notes)", "date-obs": "Date Obs :", "heure-obs": "Heure :",
-    "meteo": "Météo (Condition) :", "meteo-soleil": "Soleil", "meteo-eclaircies": "Éclaircies", "meteo-nuageux": "Nuageux", "meteo-couvert": "Couvert", "meteo-vent": "Vent", "meteo-pluie": "Pluie",
-    "h2-plan": "Plan de Semis", "valider-parcelle-plan": "Valider la parcelle",
-    "alert-choix-essai": "Veuillez choisir un essai", "alert-valider-parcelle": "Veuillez d'abord valider la parcelle", "alert-select-parcelle": "Sélectionnez une parcelle",
-    "alert-reset-notes-safe": "SÉCURITÉ : Un export de vos notes va être généré. Confirmer la suppression de toutes les notes sur l'appareil ?",
-    "alert-delete-line": "Supprimer cette ligne ?", "alert-rien": "Aucune donnée à exporter", "btn-cancel": "Annuler",
-    "Mais": "Maïs", "Tournesol": "Tournesol", "Colza": "Colza", "Soja": "Soja", "Sorgho": "Sorgho",
-    "label-import": "Overlay Interactif (Session) :", "desc-import": "Superpose les données sur le plan.",
-    "avancement-hachure": "Avancement (Hachuré) :", "deplacement-fleches": "Déplacement (Flèches) :", "interactif": "INTERACTIF", "donnee": "Donnée :",
-    "h4-param-parc": "Paramètres de la Parcelle", "param-nom-var": "Nom / Variété :", "param-type": "Type de parcelle :",
-    "h3-noter-existant": "Sélectionner un essai existant", "h3-importer-essai": "Importer un essai (CSV Base)", "desc-import-base": "Charge la structure d'un essai.",
-    "h3-creer-essai": "Créer un nouvel essai", "nom-essai": "Nom de l'essai :", "espece": "Espèce :", "colonnes-x": "Colonnes (X) :", "lignes-y": "Lignes (Y) :", "btn-creer-essai": "Créer le plan et commencer",
-    "reset-base": "⚠️ Reset Base Essais (Purger tous les plans)", 
-    "alert-reset-base-safe": "SÉCURITÉ : Une sauvegarde va être générée. Confirmer la suppression de TOUS les essais ?",
-    "h3-gps-options": "Options GPS", "btn-gps-aller": "🗺️ Aller vers cet essai", "btn-gps-definir": "📍 Définir la position ici", "gps-status-none": "Aucune position GPS.", "gps-status-ok": "Position enregistrée : "
-},
-en: {
-    "title": "Oppics", "choix-essai": "Trial Choice:", "notateur": "Your Name:", "notateur-placeholder": "Name...", "confirmer-noter": "Confirm Trial",
-    "tab-Note": "Camera", "tab-Configuration": "Setup", "num-parcelle": "Plot Number", "mode": "Mode:", "prec": "← Prev.", "valider": "Validate Plot",
-    "suiv": "Next →", "lignee": "Name / Variety:", "plan-semis": "Planting Plan", "rep": "Repetition:", 
-    "observations": "Observations:",
-    "derniers-enregistrements": "Recent Records", "th-essai": "Trial", "th-parc": "Plot", "th-rep": "Rep.", "th-act": "Act.",
-    "choix-langue": "Language:", "changer-essai": "Back to Menu", "reset-donnees": "⚠️ Reset Local Data", "date-obs": "Date:", "heure-obs": "Time:",
-    "meteo": "Weather:", "meteo-soleil": "Sunny", "meteo-eclaircies": "Partly Cloudy", "meteo-nuageux": "Cloudy", "meteo-couvert": "Overcast", "meteo-vent": "Windy", "meteo-pluie": "Rainy",
-    "h2-plan": "Planting Plan", "valider-parcelle-plan": "Validate Plot",
-    "alert-choix-essai": "Please choose a trial", "alert-valider-parcelle": "Please validate the plot first", "alert-select-parcelle": "Select a plot",
-    "alert-reset-notes-safe": "SECURITY: Confirm deletion of all notes on the device?",
-    "alert-delete-line": "Delete this record?", "alert-rien": "No data to export", "btn-cancel": "Cancel",
-    "Mais": "Corn", "Tournesol": "Sunflower", "Colza": "Rapeseed", "Soja": "Soybean", "Sorgho": "Sorghum",
-    "label-import": "Interactive Overlay:", "desc-import": "Overlays data on the map.",
-    "avancement-hachure": "Progress (Hatched):", "deplacement-fleches": "Movement (Arrows):", "interactif": "INTERACTIVE", "donnee": "Data:",
-    "h4-param-parc": "Plot Parameters", "param-nom-var": "Name / Variety:", "param-type": "Plot Type:",
-    "h3-noter-existant": "Select existing trial", "h3-importer-essai": "Import Trial (CSV)", "desc-import-base": "Loads a trial structure.",
-    "h3-creer-essai": "Create a new trial", "nom-essai": "Trial Name:", "espece": "Species:", "colonnes-x": "Columns (X):", "lignes-y": "Rows (Y):", "btn-creer-essai": "Create Plan and Start",
-    "reset-base": "⚠️ Reset Trial Base", 
-    "alert-reset-base-safe": "SECURITY: Confirm deletion of ALL trials?",
-    "h3-gps-options": "GPS Options", "btn-gps-aller": "🗺️ Go to this trial", "btn-gps-definir": "📍 Set position here", "gps-status-none": "No GPS position.", "gps-status-ok": "Saved position: "
-}
-};
-
 function applyTranslations(lang) {
+    if(typeof translations === 'undefined') return; // Sécurité si translations.js non chargé
     if(!translations[lang]) lang = 'fr';
+    
     document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
-        if (translations[lang][key]) el.innerHTML = translations[lang][key];
+        if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
         const key = el.getAttribute("data-i18n-placeholder");
-        if (translations[lang][key]) el.placeholder = translations[lang][key];
+        if (translations[lang] && translations[lang][key]) el.placeholder = translations[lang][key];
     });
     localStorage.setItem('selected_lang', lang);
 }
 
 function getT(key) {
+    if(typeof translations === 'undefined') return key;
     const lang = document.getElementById('lang-select').value;
     return translations[lang] && translations[lang][key] ? translations[lang][key] : key;
 }
@@ -588,6 +533,7 @@ const rawCsvData = `Code_Essai_Parcelle,variete,Essai,Espece,Gps,Plan_X,Plan_Y,T
 let varieteData = [], appObservations = [], currentEssai = null, currentDigitCount = 3, currentParcelleArray = ['0','0','0'], selectedPlotCodeForNavigation = null, currentEspece = null, currentGps = null, parcelleValideeCode = null, currentPlotOrder = [];
 let externalData = []; 
 let isSaving = false;
+let photoModuleCount = 0;
 
 function playSuccessSound() {
     try {
@@ -716,11 +662,10 @@ window.renderMiniPlan = () => {
     const selectedDataKey = document.getElementById('interactive-data-select')?.value;
     const todoMode = document.getElementById('todo-mode-toggle')?.checked !== false;
 
-    let html = `<table id="mini-plan-table"><thead><tr><th>Y\\X</th>`;
-    for(let c = startX; c <= endX; c++) html += `<th>${c}</th>`;
-    html += `</tr></thead><tbody>`;
+    let html = `<table id="mini-plan-table"><tbody>`;
 
-    for(let r = startY; r <= endY; r++) {
+    // Boucle inversée pour que la valeur Y la plus haute soit en haut (repère orthonormé)
+    for(let r = endY; r >= startY; r--) {
         html += `<tr><td style="background-color: var(--theme-secondary-color); color: white; font-weight: bold;">${r}</td>`;
         for(let c = startX; c <= endX; c++) {
             const p = plots.find(plot => parseInt(plot.Plan_X) === c && parseInt(plot.Plan_Y) === r);
@@ -757,6 +702,14 @@ window.renderMiniPlan = () => {
         }
         html += `</tr>`;
     }
+
+    // Ligne de l'axe X ajoutée tout en bas
+    html += `<tr><td style="background-color: var(--theme-secondary-color); color: white; font-weight: bold;">Y\\X</td>`;
+    for(let c = startX; c <= endX; c++) {
+        html += `<td style="background-color: var(--theme-secondary-color); color: white; font-weight: bold;">${c}</td>`;
+    }
+    html += `</tr>`;
+
     html += `</tbody></table>`;
     container.innerHTML = html;
 };
@@ -778,11 +731,48 @@ window.selectFromPlan = (code) => {
     if(modal) modal.style.display = 'none';
 };
 
+// CREATION MODULE PHOTO
+function createPhotoModule(isFirst = false) {
+    photoModuleCount++;
+    const mod = document.createElement('div');
+    mod.className = 'notation-group-container photo-module';
+    mod.style.border = '2px solid #2980b9';
+    mod.style.backgroundColor = '#eaf2f8';
+    mod.style.position = 'relative';
+
+    let closeBtn = '';
+    if (!isFirst) {
+        closeBtn = `<span onclick="if(confirm(getT('alert-suppr-config') || 'Voulez-vous vraiment supprimer cette boîte photo ?')) this.parentElement.remove()" style="position:absolute; top:5px; right:10px; font-weight:bold; color:#e74c3c; cursor:pointer; font-size:1.4em;">×</span>`;
+    }
+
+    mod.innerHTML = `
+        ${closeBtn}
+        <h4 style="color: #2980b9; margin-bottom:10px; text-align:center;">📷 Prise de Photo</h4>
+        <div style="display:flex; align-items:center; gap:5px; width:100%; justify-content:center; margin-bottom: 15px;">
+            <label style="width:auto; margin:0;">Préfixe:</label>
+            <input type="text" class="mod-prefix" size="5" placeholder="PH" value="PH" style="width:60px !important; margin:0;">
+            <label style="width:auto; margin:0; margin-left:10px;">Num:</label>
+            <input type="number" class="mod-num" value="1" min="1" style="width:80px !important; margin:0;">
+            <button class="btn-secondary cube-btn" style="width:35px !important; height:35px !important; margin-left:5px;" onclick="let n = this.parentElement.querySelector('.mod-num'); n.value = Math.max(1, parseInt(n.value) - 1)">-</button>
+            <button class="btn-secondary cube-btn" style="width:35px !important; height:35px !important; margin-left:5px;" onclick="let n = this.parentElement.querySelector('.mod-num'); n.value = parseInt(n.value) + 1">+</button>
+        </div>
+        <button class="photo-module-btn" onclick="if(!parcelleValideeCode){alert('Veuillez valider une parcelle d\\'abord.'); return;} this.nextElementSibling.click()">
+            <span>📷</span> PRENDRE LA PHOTO
+        </button>
+        <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoUpload(event, this)">
+        <p style="text-align:center; font-size:0.8em; color:#666; margin-top:8px;">La ligne est enregistrée automatiquement après la photo.</p>
+    `;
+    document.getElementById('photo-modules-container').appendChild(mod);
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('selected_lang') || 'fr';
     const langSelect = document.getElementById('lang-select');
     if (langSelect) langSelect.value = savedLang;
-    applyTranslations(savedLang);
+    
+    // Un léger délai pour s'assurer que translations.js a eu le temps de s'exécuter si chargé asynchronement
+    setTimeout(() => applyTranslations(savedLang), 50);
     
     if (localStorage.getItem('newtea_dark_mode') === 'true') {
         document.getElementById('dark-mode-toggle').checked = true;
@@ -799,6 +789,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initEssaiSelector();
     loadLocalObservations();
     setupEventListeners();
+
+    // Initialisation des modules photos
+    createPhotoModule(true);
+    document.getElementById('add-photo-module-btn').onclick = () => {
+        if (document.querySelectorAll('.photo-module').length >= 4) {
+            alert("Vous avez atteint la limite de 4 boîtes photo.");
+            return;
+        }
+        createPhotoModule(false);
+    };
 
     const obsInput = document.getElementById('obs');
     const clearObsBtn = document.getElementById('clear-obs');
@@ -1149,18 +1149,19 @@ function openSowingPlan() {
     let minX = Math.min(...plots.map(p => parseInt(p.Plan_X))), minY = Math.min(...plots.map(p => parseInt(p.Plan_Y)));
     let maxX = Math.max(...plots.map(p => parseInt(p.Plan_X))), maxY = Math.max(...plots.map(p => parseInt(p.Plan_Y)));
 
+    // border-collapse à "separate" est primordial pour position sticky
     let html = `<div id="sowing-plan-inner-wrapper" style="position:relative; display:inline-block; min-width:100%;">
     <style>
-        #sowing-plan-inner-wrapper table { border: 1px solid #444; width: 100%; border-collapse: collapse; }
-        #sowing-plan-inner-wrapper th, #sowing-plan-inner-wrapper td { border: 1px solid var(--theme-input-border-color); text-align: center; padding: 8px; font-size: 0.9em; position:relative; }
-        #sowing-plan-inner-wrapper th { background-color: var(--theme-secondary-color); color: white; }
+        #sowing-plan-inner-wrapper table { border: none; width: 100%; border-collapse: separate; border-spacing: 0; border-top: 1px solid var(--theme-input-border-color); border-left: 1px solid var(--theme-input-border-color); }
+        #sowing-plan-inner-wrapper th, #sowing-plan-inner-wrapper td { border-right: 1px solid var(--theme-input-border-color); border-bottom: 1px solid var(--theme-input-border-color); text-align: center; padding: 8px; font-size: 0.9em; position:relative; background-color: var(--theme-card-background-color); }
+        .sticky-x-bottom { position: sticky; bottom: 0; background: var(--theme-secondary-color) !important; color:white; z-index: 10; font-weight: bold; border-top: 2px solid #999 !important; }
+        .sticky-y { position: sticky; left: 0; background: var(--theme-secondary-color) !important; color:white; z-index: 9; font-weight: bold; }
+        .sticky-corner-bottom { position: sticky; bottom: 0; left: 0; z-index: 11; background: var(--theme-secondary-color) !important; color:white; border-top: 2px solid #999 !important; border-right: 2px solid #999 !important; }
         .current-plot-cell { background-color: var(--theme-primary-color) !important; color: white !important; font-weight: bold; box-shadow: inset 0 0 0 2px #fff; }
-    </style><table><thead><tr><th class="sticky-corner">Y\\X</th>`;
-    
-    for(let c=minX; c<=maxX; c++) html += `<th class="sticky-x">${c}</th>`;
-    html += '</tr></thead><tbody>';
+    </style><table><tbody>`;
 
-    for(let r=minY; r<=maxY; r++) {
+    // Boucle inversée pour que la valeur Y la plus haute soit en haut
+    for(let r=maxY; r>=minY; r--) {
         html += `<tr><td class="sticky-y" style="background-color: var(--theme-secondary-color); color:white; font-weight:bold;">${r}</td>`;
         for(let c=minX; c<=maxX; c++) {
             const p = plots.find(plot => parseInt(plot.Plan_X) === c && parseInt(plot.Plan_Y) === r);
@@ -1190,7 +1191,13 @@ function openSowingPlan() {
         }
         html += '</tr>';
     }
-    html += '</tbody></table></div>';
+
+    // Ligne de l'axe X ajoutée tout en bas avec position sticky-bottom
+    html += `<tr><td class="sticky-corner-bottom">Y\\X</td>`;
+    for(let c=minX; c<=maxX; c++) html += `<td class="sticky-x-bottom">${c}</td>`;
+    html += `</tr>`;
+
+    html += `</tbody></table></div>`;
     
     document.getElementById('sowing-plan-grid-container').innerHTML = html;
     document.getElementById('sowingPlanModal').style.display = 'block';
@@ -1270,7 +1277,7 @@ window.insertFreqComment = (txt) => {
 };
 
 // Fonction pour l'enregistrement (avec ou sans photo passée en paramètre)
-function enregistrerObservation(moveDir, photoFilename = null) {
+function enregistrerObservation(moveDir, photoFilename = null, photoPrefix = "", photoNum = "") {
     if (isSaving && !photoFilename) return;
     if (!photoFilename) { isSaving = true; setTimeout(() => { isSaving = false; }, 500); }
 
@@ -1296,12 +1303,12 @@ function enregistrerObservation(moveDir, photoFilename = null) {
     if (fallbackVariete) { fallbackVariete = fallbackVariete.split('(')[0].trim(); } 
     else { fallbackVariete = "Inconnue"; }
 
-    // Création d'une nouvelle ligne d'observation à chaque fois
     let obs = {
         id: Date.now(), Notateur: document.getElementById('type-notation-session').value, ESSAI: currentEssai, Parcelle: parcelleValideeCode,
         Variete: paramVariete || fallbackVariete,
         Date: document.getElementById('custom-date').value, Heure: document.getElementById('custom-time').value,
         Meteo: document.getElementById('meteo-select').value, Rep: document.getElementById('rep').value, 
+        Prefixe: photoPrefix, Num: photoNum,
         Observations: obsText, Photos: photoFilename || ""
     };
     
@@ -1309,20 +1316,22 @@ function enregistrerObservation(moveDir, photoFilename = null) {
     localStorage.setItem('observations_photo_v1', JSON.stringify(appObservations)); 
     renderRecapTable();
     
-    // On efface le champ observation après sauvegarde
+    // On efface le champ observation après sauvegarde pour être prêt pour la suite
     document.getElementById('obs').value = "";
     document.getElementById('clear-obs').style.display = "none";
 
-    // Déplacement automatique (si moveDir !== 0) ou Incrémentation de la REP (si on reste sur la parcelle)
+    // Déplacement automatique (si moveDir !== 0)
+    let r = document.getElementById('rep');
     if(moveDir !== 0) {
         handleNavigate(moveDir); 
         parcelleValideeCode = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0'); 
         updateUIForSelectedPlot(selectedPlotCodeForNavigation); 
-        document.getElementById('rep').value = 'A';
+        r.value = 'A';
     } else {
-        // Incrémente la lettre de la REP si on reste sur la même parcelle (ex: A -> B -> C)
-        let r = document.getElementById('rep');
-        r.value = String.fromCharCode(r.value.toUpperCase().charCodeAt(0) + 1);
+        // Incrémente la lettre de la REP *UNIQUEMENT* si ce n'est pas une prise de photo
+        if(!photoFilename) {
+            r.value = String.fromCharCode(r.value.toUpperCase().charCodeAt(0) + 1);
+        }
     }
     
     updateProgressBar();
@@ -1347,7 +1356,7 @@ function loadLocalObservations() { appObservations = JSON.parse(localStorage.get
 
 function generateNotesCSVString() {
     if(!appObservations.length) return null;
-    const finalKeys = ["Notateur", "ESSAI", "Parcelle", "Variete", "Date", "Heure", "Meteo", "Rep", "Photos", "Observations"];
+    const finalKeys = ["Notateur", "ESSAI", "Parcelle", "Variete", "Date", "Heure", "Meteo", "Rep", "Prefixe", "Num", "Photos", "Observations"];
     let csv = finalKeys.join(";") + "\n";
     appObservations.forEach(o => { csv += finalKeys.map(k => o[k] === undefined ? "" : o[k]).join(";") + "\n"; });
     return csv;
@@ -1361,7 +1370,6 @@ function telechargerCSV() {
     const date = document.getElementById('custom-date').value || new Date().toISOString().split('T')[0]; 
     const notateur = document.getElementById('type-notation-session').value || "Notateur"; 
     const sanitize = (s) => s.replace(/[^a-z0-9]/gi, '_'); 
-    // Format : Notateur.Date.Essai.csv
     const filename = `${sanitize(notateur)}.${sanitize(date)}.${sanitize(essai)}.csv`;
     
     const a = document.createElement('a'); 
@@ -1374,16 +1382,14 @@ async function partagerCSV() {
     const csv = generateNotesCSVString();
     if(!csv) return alert("Rien à exporter.");
 
-    // IMPORTANT: Explication pour les photos
     alert("📌 NOTE IMPORTANTE :\nLes photos ont été enregistrées directement dans la galerie ou le dossier Téléchargements de votre appareil.\n\nN'oubliez pas d'ouvrir le dossier Drive partagé pour y glisser les photos en même temps que le CSV !");
 
-    telechargerCSV(); // Sauvegarde locale par sécurité
+    telechargerCSV();
 
     const essai = currentEssai || "Essai"; 
     const date = document.getElementById('custom-date').value || new Date().toISOString().split('T')[0]; 
     const notateur = document.getElementById('type-notation-session').value || "Notateur"; 
     const sanitize = (s) => s.replace(/[^a-z0-9]/gi, '_'); 
-    // Format : Notateur.Date.Essai.csv
     const filename = `${sanitize(notateur)}.${sanitize(date)}.${sanitize(essai)}.csv`;
 
     const file = new File([new Blob([csv], {type: 'text/csv;charset=utf-8'})], filename, { type: 'text/csv' });
@@ -1469,18 +1475,16 @@ window.toggleDictation = () => {
 // PHOTO MODULE SPECIFIC LOGIC
 // ==========================================
 
-window.triggerPhoto = () => {
-    if (!parcelleValideeCode) return alert("Veuillez valider une parcelle d'abord.");
-    document.getElementById('file-input-main').click();
-};
-
-window.handlePhotoUpload = (event) => {
+window.handlePhotoUpload = (event, inputElement) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Récupération des éléments pour construire le nom
-    const prefix = document.getElementById('photo-prefix').value || "PH";
-    const numInput = document.getElementById('photo-num');
+    // Isoler le container du module actif
+    const moduleContainer = inputElement.closest('.photo-module');
+    const prefixInput = moduleContainer.querySelector('.mod-prefix');
+    const numInput = moduleContainer.querySelector('.mod-num');
+
+    const prefix = prefixInput.value || "PH";
     const num = String(numInput.value).padStart(3, '0'); 
     
     let currentPlot = varieteData.find(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') === parcelleValideeCode && p.Essai === currentEssai);
@@ -1488,12 +1492,15 @@ window.handlePhotoUpload = (event) => {
     let pVar = currentPlot ? currentPlot.variete : "Inconnue";
     let px = (currentPlot && currentPlot.Plan_X) ? currentPlot.Plan_X : "X";
     let py = (currentPlot && currentPlot.Plan_Y) ? currentPlot.Plan_Y : "Y";
-    let rep = document.getElementById('rep').value || "A";
+    let dateStr = document.getElementById('custom-date').value; // Format AAAA-MM-JJ
 
-    const sanitize = (s) => String(s).replace(/[^a-zA-Z0-9-]/g, '_');
+    // Nettoyage en conservant les espaces pour la variété (contrairement au nettoyage strict précédent)
+    const sanitizeVar = (s) => String(s).replace(/[^a-zA-Z0-9\s-_]/g, '');
+    const sanitizeName = (s) => String(s).replace(/[^a-zA-Z0-9-_]/g, '');
 
-    // Format demandé : PH001.Variete.Essai.x.y.rep (sans le code entre parenthèse)
-    const baseName = `${prefix}${num}.${sanitize(pVar)}.${sanitize(currentEssai)}.${px}.${py}.${rep}`;
+    // Format demandé : Variete(Prefixe.Num).Date.(X.Y).Essai.jpg
+    // Exemple : LID 5053L SU(PH.001).2026-04-16.(1.1).Test.jpg
+    const baseName = `${sanitizeVar(pVar)}(${prefix}.${num}).${dateStr}.(${px}.${py}).${sanitizeName(currentEssai)}`;
     const filename = `${baseName}.jpg`;
 
     // Déclenchement du téléchargement dans la galerie
@@ -1505,14 +1512,17 @@ window.handlePhotoUpload = (event) => {
     link.click();
     document.body.removeChild(link);
 
-    // Incrémenter le numéro pour la prochaine photo
-    numInput.value++;
+    // Incrémenter UNIQUEMENT le numéro de CE module pour la prochaine photo
+    numInput.value = parseInt(numInput.value) + 1;
 
-    // Enregistrer la donnée (Dir 0 = on reste sur la même parcelle, ce qui va incrémenter la REP automatiquement)
-    enregistrerObservation(0, filename); 
+    // Enregistrer la donnée. Dir 0, et passe le filename, prefix et num pour le CSV
+    enregistrerObservation(0, filename, prefix, num); 
+
+    // Remettre à zéro l'input file pour permettre la sélection de la même image au besoin
+    event.target.value = '';
     
-    // Feedback visuel court
-    const btn = document.querySelector('.photo-module-btn');
+    // Feedback visuel court spécifique à CE module
+    const btn = moduleContainer.querySelector('.photo-module-btn');
     const originalText = btn.innerHTML;
     btn.innerHTML = "✅ PHOTO ENREGISTRÉE !";
     btn.style.backgroundColor = "#27ae60";
