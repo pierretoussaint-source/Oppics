@@ -11,7 +11,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#227A49">
     
-    <!-- Importation du fichier de traduction externe -->
     <script src="./translations.js"></script>
 
     <script>
@@ -131,7 +130,8 @@
 
         .notation-group-container { border: 1px solid var(--theme-input-border-color); padding: 15px; border-radius: 8px; margin-bottom: 15px; background-color: var(--theme-card-background-color); transition: all 0.3s ease; }
         
-        #sowing-plan-grid-container { max-height: 60vh; overflow: auto; border: 1px solid var(--theme-input-border-color); position: relative; }
+        /* Conteneur principal du Sowing Plan */
+        #sowing-plan-grid-container { max-height: 60vh; overflow: auto; border: 1px solid var(--theme-input-border-color); position: relative; background: var(--theme-background-color); }
         
         .type-M { background-color: #e3f2fd; color:#333; } 
         .type-F { background-color: #e8f5e9; color:#333; } 
@@ -447,8 +447,8 @@
         
         <hr>
         <h3 data-i18n="h3-gestion-donnees" style="color:#c0392b;">Gestion des données</h3>
-        <button id="partager-csv" class="btn-primary btn-block" style="margin-bottom:10px; background-color: #2980b9;">📥/📤 Sauvegarder CSV & Partager</button>
-        <button id="telecharger-plan-csv" class="btn-accent btn-block" style="margin-bottom:10px;">📥/📤 Sauvegarder & Partager Plan Essai</button>
+        <button id="partager-csv" class="btn-primary btn-block" style="margin-bottom:10px; background-color: #2980b9; padding: 15px; font-weight: bold;">📥/📤 Sauvegarder CSV & Partager</button>
+        <button id="telecharger-plan-csv" class="btn-accent btn-block" style="margin-bottom:10px;">📥 Sauvegarder & Partager Plan Essai</button>
         
         <button id="reset-data-local" class="btn-danger btn-block" style="margin-bottom:10px;" data-i18n="reset-donnees">⚠️ Reset Données (Purger les Notes)</button>
         <button id="reset-base-essais" class="btn-danger btn-block" style="background-color:#900;" data-i18n="reset-base">⚠️ Reset Base Essais (Purger tous les plans)</button>
@@ -536,7 +536,6 @@ function getT(key) {
 // ==========================================
 // GLOBAL VARIABLES & INITIALIZATION
 // ==========================================
-// NOUVEAU rawCsvData avec Protocoles pour l'essai "Test"
 const rawCsvData = `Code_Essai_Parcelle,variete,Essai,Espece,Gps,Plan_X,Plan_Y,Type,Protocole
 1,LID 5053L SU,Test,Tournesol,"43.69,1.27",1,1,H,Proto_A
 2,MYLADY,Test,Mais,"43.47,-0.34",2,1,F,Proto_A
@@ -551,9 +550,10 @@ const rawCsvData = `Code_Essai_Parcelle,variete,Essai,Espece,Gps,Plan_X,Plan_Y,T
 
 let varieteData = [], appObservations = [], currentEssai = null, currentDigitCount = 3, currentParcelleArray = ['0','0','0'], selectedPlotCodeForNavigation = null, currentEspece = null, currentGps = null, parcelleValideeCode = null, currentPlotOrder = [];
 let externalData = []; 
-let selectedProtocoles = []; // Gère le filtre Protocole
+let selectedProtocoles = []; 
 let isSaving = false;
 let photoModuleCount = 0;
+
 
 function playSuccessSound() {
     try {
@@ -776,10 +776,8 @@ function createPhotoModule(isFirst = false) {
         <div style="display:flex; align-items:center; gap:5px; width:100%; justify-content:center; margin-bottom: 15px;">
             <label style="width:auto; margin:0;">Préfixe:</label>
             <input type="text" class="mod-prefix" size="5" placeholder="PH" value="PH" style="width:60px !important; margin:0;">
-            <label style="width:auto; margin:0; margin-left:10px;">Num:</label>
-            <input type="number" class="mod-num" value="1" min="1" style="width:80px !important; margin:0;">
-            <button class="btn-secondary cube-btn" style="width:35px !important; height:35px !important; margin-left:5px;" onclick="let n = this.parentElement.querySelector('.mod-num'); n.value = Math.max(1, parseInt(n.value) - 1)">-</button>
-            <button class="btn-secondary cube-btn" style="width:35px !important; height:35px !important; margin-left:5px;" onclick="let n = this.parentElement.querySelector('.mod-num'); n.value = parseInt(n.value) + 1">+</button>
+            <label style="display:none; width:auto; margin:0; margin-left:10px;">Num:</label>
+            <input type="number" class="mod-num" value="1" min="1" style="display:none; width:80px !important; margin:0;">
         </div>
         <button class="photo-module-btn" onclick="if(!parcelleValideeCode){alert('Veuillez valider une parcelle d\\'abord.'); return;} this.nextElementSibling.click()">
             <span>📷</span> PRENDRE LA PHOTO
@@ -875,7 +873,6 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsText(file);
     });
 
-    // Télécharger modèle CSV du plan de semis
     document.getElementById('download-template-csv').addEventListener('click', () => {
         const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type", "Protocole"];
         let csv = cols.join(";") + "\n";
@@ -916,11 +913,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById('choix-essai').value = name;
         
-        // Simuler le change pour afficher les protocoles
         const event = new Event('change');
         document.getElementById('choix-essai').dispatchEvent(event);
-        
-        // Puis valider
         document.getElementById('confirmer-essai').click();
     });
     
@@ -1003,7 +997,6 @@ function generatePlotOrder() {
     currentPlotOrder = [];
     if (!currentEssai) return;
     
-    // Filtrer par Essai ET par Protocole Sélectionné
     let plots = varieteData.filter(p => p.Essai === currentEssai && selectedProtocoles.includes(p.Protocole || "Sans protocole"));
 
     const hasCoords = plots.every(p => p.Plan_X && p.Plan_Y);
@@ -1145,9 +1138,12 @@ function setupEventListeners() {
     document.getElementById('changer-essai').onclick = () => location.reload();
     
     document.getElementById('reset-data-local').onclick = () => {
-        if(confirm(getT("alert-reset-notes-safe"))) {
+        if(confirm(getT("alert-reset-notes-safe") || "Voulez-vous vraiment effacer les notes de l'appareil ?")) {
             if(appObservations.length > 0) telechargerCSV();
-            setTimeout(() => { localStorage.removeItem('observations_photo_v1'); location.reload(); }, 1500);
+            setTimeout(() => { 
+                localStorage.removeItem('observations_photo_v1'); 
+                location.reload(); 
+            }, 1500);
         }
     };
     
@@ -1234,25 +1230,28 @@ function openSowingPlan() {
     let minX = Math.min(...plots.map(p => parseInt(p.Plan_X))), minY = Math.min(...plots.map(p => parseInt(p.Plan_Y)));
     let maxX = Math.max(...plots.map(p => parseInt(p.Plan_X))), maxY = Math.max(...plots.map(p => parseInt(p.Plan_Y)));
 
-    let html = `<div id="sowing-plan-inner-wrapper" style="position:relative; display:inline-block; min-width:100%;">
+    let html = `
     <style>
-        #sowing-plan-inner-wrapper table { border: none; width: 100%; border-collapse: separate; border-spacing: 0; border-top: 1px solid var(--theme-input-border-color); border-left: 1px solid var(--theme-input-border-color); }
-        #sowing-plan-inner-wrapper th, #sowing-plan-inner-wrapper td { border-right: 1px solid var(--theme-input-border-color); border-bottom: 1px solid var(--theme-input-border-color); text-align: center; padding: 8px; font-size: 0.9em; position:relative; background-color: var(--theme-card-background-color); }
-        .sticky-x-bottom { position: sticky; bottom: 0; background: var(--theme-secondary-color) !important; color:white; z-index: 10; font-weight: bold; border-top: 2px solid #999 !important; }
-        .sticky-y { position: sticky; left: 0; background: var(--theme-secondary-color) !important; color:white; z-index: 9; font-weight: bold; }
-        .sticky-corner-bottom { position: sticky; bottom: 0; left: 0; z-index: 11; background: var(--theme-secondary-color) !important; color:white; border-top: 2px solid #999 !important; border-right: 2px solid #999 !important; }
+        #sowing-table { border: none; width: 100%; border-collapse: separate; border-spacing: 0; border-top: 1px solid var(--theme-input-border-color); border-left: 1px solid var(--theme-input-border-color); min-width: max-content; }
+        #sowing-table th, #sowing-table td { border-right: 1px solid var(--theme-input-border-color); border-bottom: 1px solid var(--theme-input-border-color); text-align: center; padding: 8px; font-size: 0.9em; background-color: var(--theme-card-background-color); position: relative;}
+        
+        .sticky-x-bottom { position: sticky !important; bottom: 0 !important; background: var(--theme-secondary-color) !important; color:white !important; z-index: 10 !important; font-weight: bold !important; border-top: 2px solid #555 !important; border-bottom: none !important;}
+        .sticky-y { position: sticky !important; left: 0 !important; background: var(--theme-secondary-color) !important; color:white !important; z-index: 9 !important; font-weight: bold !important; border-right: 2px solid #555 !important;}
+        .sticky-corner-bottom { position: sticky !important; bottom: 0 !important; left: 0 !important; z-index: 11 !important; background: var(--theme-secondary-color) !important; color:white !important; border-top: 2px solid #555 !important; border-right: 2px solid #555 !important; border-bottom: none !important;}
+        
         .current-plot-cell { background-color: var(--theme-primary-color) !important; color: white !important; font-weight: bold; box-shadow: inset 0 0 0 2px #fff; }
-    </style><table><tbody>`;
+        .plan-cell { cursor: pointer; transition: 0.2s; }
+        .plan-cell:hover { filter: brightness(0.9); }
+    </style><table id="sowing-table"><tbody>`;
 
     for(let r=maxY; r>=minY; r--) {
-        html += `<tr><td class="sticky-y" style="background-color: var(--theme-secondary-color); color:white; font-weight:bold;">${r}</td>`;
+        html += `<tr><td class="sticky-y">${r}</td>`;
         for(let c=minX; c<=maxX; c++) {
             const p = plots.find(plot => parseInt(plot.Plan_X) === c && parseInt(plot.Plan_Y) === r);
             let codeOriginal = p ? String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') : "";
             let classes = ['plan-cell'];
             let displayContent = (p && p.Type) ? p.Type : '';
             let onClickAttr = "";
-            let inlineStyle = "background:transparent;";
 
             if (p) {
                 const plotProto = p.Protocole || "Sans protocole";
@@ -1260,9 +1259,8 @@ function openSowingPlan() {
 
                 if (!isSelectedProtocol) {
                     classes.push('plot-disabled');
-                    inlineStyle = "cursor:not-allowed;";
+                    classes.splice(classes.indexOf('plan-cell'), 1); // Remove hover effect
                 } else {
-                    inlineStyle = "cursor:pointer;";
                     onClickAttr = `onclick="selectFromPlan('${codeOriginal}')"`;
                 }
 
@@ -1282,7 +1280,7 @@ function openSowingPlan() {
                 if (codeOriginal === selectedPadded) classes.push('current-plot-cell');
             }
 
-            html += `<td class="${classes.join(' ')}" style="${inlineStyle}" data-code="${codeOriginal}" ${onClickAttr}>
+            html += `<td class="${classes.join(' ')}" data-code="${codeOriginal}" ${onClickAttr}>
                         ${p ? parseInt(p.Code_Essai_Parcelle) : ""}<br><span style="font-size:0.75em; position:relative; z-index:2;">${displayContent}</span></td>`;
         }
         html += '</tr>';
@@ -1292,7 +1290,7 @@ function openSowingPlan() {
     for(let c=minX; c<=maxX; c++) html += `<td class="sticky-x-bottom">${c}</td>`;
     html += `</tr>`;
 
-    html += `</tbody></table></div>`;
+    html += `</tbody></table>`;
     
     document.getElementById('sowing-plan-grid-container').innerHTML = html;
     document.getElementById('sowingPlanModal').style.display = 'block';
@@ -1301,15 +1299,19 @@ function openSowingPlan() {
 }
 
 window.drawMovementPath = () => {
-    const wrapper = document.getElementById('sowing-plan-inner-wrapper');
-    if(!wrapper) return;
+    const container = document.getElementById('sowing-plan-grid-container');
+    const table = document.getElementById('sowing-table');
+    if(!container || !table) return;
     
     let svg = document.getElementById('movement-path-svg');
     if (svg) svg.remove();
 
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.id = 'movement-path-svg';
-    svg.style.position = 'absolute'; svg.style.top = '0'; svg.style.left = '0'; svg.style.width = '100%'; svg.style.height = '100%'; svg.style.pointerEvents = 'none'; svg.style.zIndex = '5';
+    svg.style.position = 'absolute'; svg.style.top = '0'; svg.style.left = '0'; 
+    svg.style.width = table.scrollWidth + 'px'; 
+    svg.style.height = table.scrollHeight + 'px'; 
+    svg.style.pointerEvents = 'none'; svg.style.zIndex = '5';
 
     const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
     const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
@@ -1322,7 +1324,7 @@ window.drawMovementPath = () => {
 
     let prevX = null, prevY = null;
     currentPlotOrder.forEach(code => {
-        const cell = wrapper.querySelector(`td[data-code="${code}"]`);
+        const cell = container.querySelector(`td[data-code="${code}"]`);
         if (cell) {
             const cellX = cell.offsetLeft + (cell.offsetWidth / 2);
             const cellY = cell.offsetTop + (cell.offsetHeight / 2);
@@ -1339,7 +1341,7 @@ window.drawMovementPath = () => {
             prevX = cellX; prevY = cellY;
         }
     });
-    wrapper.appendChild(svg);
+    container.appendChild(svg);
 };
 
 
@@ -1574,10 +1576,8 @@ window.handlePhotoUpload = (event, inputElement) => {
 
     const moduleContainer = inputElement.closest('.photo-module');
     const prefixInput = moduleContainer.querySelector('.mod-prefix');
-    const numInput = moduleContainer.querySelector('.mod-num');
 
     const prefix = prefixInput.value || "PH";
-    const num = String(numInput.value).padStart(3, '0'); 
     
     let currentPlot = varieteData.find(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') === parcelleValideeCode && p.Essai === currentEssai);
     
@@ -1591,11 +1591,11 @@ window.handlePhotoUpload = (event, inputElement) => {
     const sanitizeVar = (s) => String(s).replace(/[^a-zA-Z0-9\s-_]/g, '');
     const sanitizeName = (s) => String(s).replace(/[^a-zA-Z0-9-_]/g, '');
 
-    // NOUVEAU Format demandé : LIGNEE.PREFIXE.ESSAI.ANNEE.(X,Y).jpg
-    // Le PREFIXE contient ici le num pour éviter d'écraser la photo si plusieurs sont prises
-    const baseName = `${sanitizeVar(pVar)}.${prefix}${num}.${sanitizeName(currentEssai)}.${annee}.(${px},${py})`;
+    // Format demandé : LIGNEE.PREFIXE.ESSAI.ANNEE.(X,Y).jpg (SANS numéro .001)
+    const baseName = `${sanitizeVar(pVar)}.${prefix}.${sanitizeName(currentEssai)}.${annee}.(${px},${py})`;
     const filename = `${baseName}.jpg`;
 
+    // Déclenchement du téléchargement manuel (retour à l'ancienne méthode)
     const blobUrl = URL.createObjectURL(file);
     const link = document.createElement("a");
     link.href = blobUrl;
@@ -1604,9 +1604,8 @@ window.handlePhotoUpload = (event, inputElement) => {
     link.click();
     document.body.removeChild(link);
 
-    numInput.value = parseInt(numInput.value) + 1;
-
-    enregistrerObservation(0, filename, prefix, num); 
+    // On passe un Numération vide ""
+    enregistrerObservation(0, filename, prefix, ""); 
 
     event.target.value = '';
     
