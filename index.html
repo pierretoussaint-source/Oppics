@@ -63,6 +63,7 @@
         body.dark-mode .interactive-controls { background-color: #2c3e2c; border-color: #3d5a3d;}
         body.dark-mode .interactive-val { background: rgba(0,0,0,0.6); color: #fff; border-color:#555;}
         body.dark-mode .notation-group-container { background-color: #242424; border-color:#444;}
+        body.dark-mode .plot-disabled { background-color: #2a2a2a !important; color: #555 !important; border-color: #444 !important; }
 
         .theme-mais { --theme-primary-color: #f1c40f; --theme-secondary-color: #27ae60; --theme-text-on-primary: #333; --theme-heading-color: #27ae60; --theme-button-hover-bg: #e6b800; --theme-tab-active-bg: #f1c40f; --theme-tab-active-text: #333; --theme-gps-button-bg: #27ae60; }
         .theme-tournesol { --theme-primary-color: #e67e22; --theme-secondary-color: #2c3e50; --theme-text-on-primary: white; --theme-heading-color: #e67e22; --theme-button-hover-bg: #d35400; --theme-tab-active-bg: #e67e22; --theme-tab-active-text: white; --theme-gps-button-bg: #2c3e50; }
@@ -110,6 +111,8 @@
         #mini-plan-table td.mini-cell:hover { background-color: #e9ecef; }
         body.dark-mode #mini-plan-table td.mini-cell:hover { background-color: #444; }
         #mini-plan-table td.mini-selected { background-color: var(--theme-primary-color) !important; color: white !important; font-weight: bold; box-shadow: inset 0 0 0 2px #fff;}
+
+        .plot-disabled { background-color: #e0e0e0 !important; color: #a0a0a0 !important; cursor: not-allowed !important; opacity: 0.6; }
 
         .cube-btn { width: 45px !important; height: 45px !important; padding: 0 !important; margin: 0 !important; display: inline-flex !important; align-items: center; justify-content: center; font-size: 1.8em !important; font-weight: bold !important; border-radius: 10px !important; flex-shrink: 0; line-height: 1; }
 
@@ -209,6 +212,17 @@
     <div class="setup-section">
         <h3 data-i18n="h3-noter-existant">Noter un essai existant</h3>
         <select id="choix-essai"></select>
+        
+        <!-- MODULE DE SÉLECTION DE PROTOCOLE -->
+        <div id="protocol-selection-container" style="display:none; margin-top:10px; padding: 10px; border: 1px solid var(--theme-input-border-color); border-radius: 5px; background: rgba(0,0,0,0.02);">
+            <label style="margin-bottom: 5px; font-weight:bold; color:var(--theme-secondary-color);">Protocoles associés (filtre) :</label>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <button type="button" class="btn-secondary" style="margin:0; padding:5px 10px; font-size:0.8em;" onclick="selectAllProtocols(true)">Tout cocher</button>
+                <button type="button" class="btn-secondary" style="margin:0; padding:5px 10px; font-size:0.8em;" onclick="selectAllProtocols(false)">Tout décocher</button>
+            </div>
+            <div id="protocol-checkboxes" style="display:flex; flex-direction:column; gap:5px;"></div>
+        </div>
+
         <button id="confirmer-essai" class="btn-primary btn-block" data-i18n="confirmer-noter">Confirmer l'essai</button>
     </div>
 
@@ -216,6 +230,7 @@
         <h3 data-i18n="h3-importer-essai">Importer un essai (CSV Base)</h3>
         <input type="file" id="import-new-trial-csv" accept=".csv" style="border: 1px solid var(--theme-secondary-color);">
         <p style="font-size:0.8em; color:#666; margin-top:0;" data-i18n="desc-import-base">Charge un CSV contenant la structure d'un essai pour l'ajouter à la base de données locale.</p>
+        <button id="download-template-csv" class="btn-secondary btn-block" style="margin-top:10px; padding:8px;">📥 Télécharger modèle CSV de plan</button>
     </div>
 
     <div class="setup-section">
@@ -231,6 +246,9 @@
             <option value="Soja" data-i18n="Soja">Soja</option>
             <option value="Sorgho" data-i18n="Sorgho">Sorgho</option>
         </select>
+
+        <label data-i18n="protocole">Protocole global (Optionnel) :</label>
+        <input type="text" id="new-trial-protocole" placeholder="Ex: Proto_Rendement">
         
         <div style="display:flex; gap:10px;">
             <div style="flex:1;">
@@ -495,7 +513,7 @@
 
 <script>
 function applyTranslations(lang) {
-    if(typeof translations === 'undefined') return; // Sécurité si translations.js non chargé
+    if(typeof translations === 'undefined') return; 
     if(!translations[lang]) lang = 'fr';
     
     document.querySelectorAll("[data-i18n]").forEach(el => {
@@ -518,20 +536,22 @@ function getT(key) {
 // ==========================================
 // GLOBAL VARIABLES & INITIALIZATION
 // ==========================================
-const rawCsvData = `Code_Essai_Parcelle,variete,Essai,Espece,Gps,Plan_X,Plan_Y,Type
-1,LID 5053L SU,Test,Tournesol,"43.69,1.27",1,1,H
-2,MYLADY,Test,Mais,"43.47,-0.34",2,1,F
-3,LID PANDORE,Test,Sorgho,"41.75,-0.79",3,1,M
-4,ISIDOR,Test,Soja,"43.65,1.65",1,2,F
-5,LID TRETO,Test,Colza,"44.39,1.39",2,2,H
-6,LID 5053L SU,Test,Tournesol,"0.0,0.0",3,2,M
-7,ISIDOR,Test,Soja,"0.0,0.0",1,3,M
-8,MYLADY,Test,Mais,"0.0,0.0",2,3,F
-9,LID TRETO,Test,Colza,"0.0,0.0",3,3,H
-10,LID PANDORE,Test,Sorgho,"41.75,-0.79",5,6,M`;
+// NOUVEAU rawCsvData avec Protocoles pour l'essai "Test"
+const rawCsvData = `Code_Essai_Parcelle,variete,Essai,Espece,Gps,Plan_X,Plan_Y,Type,Protocole
+1,LID 5053L SU,Test,Tournesol,"43.69,1.27",1,1,H,Proto_A
+2,MYLADY,Test,Mais,"43.47,-0.34",2,1,F,Proto_A
+3,LID PANDORE,Test,Sorgho,"41.75,-0.79",3,1,M,Proto_B
+4,ISIDOR,Test,Soja,"43.65,1.65",1,2,F,
+5,LID TRETO,Test,Colza,"44.39,1.39",2,2,H,Proto_B
+6,LID 5053L SU,Test,Tournesol,"0.0,0.0",3,2,M,Proto_A
+7,ISIDOR,Test,Soja,"0.0,0.0",1,3,M,Proto_B
+8,MYLADY,Test,Mais,"0.0,0.0",2,3,F,
+9,LID TRETO,Test,Colza,"0.0,0.0",3,3,H,Proto_A
+10,LID PANDORE,Test,Sorgho,"41.75,-0.79",5,6,M,Proto_C`;
 
 let varieteData = [], appObservations = [], currentEssai = null, currentDigitCount = 3, currentParcelleArray = ['0','0','0'], selectedPlotCodeForNavigation = null, currentEspece = null, currentGps = null, parcelleValideeCode = null, currentPlotOrder = [];
 let externalData = []; 
+let selectedProtocoles = []; // Gère le filtre Protocole
 let isSaving = false;
 let photoModuleCount = 0;
 
@@ -623,7 +643,7 @@ window.populateInteractiveFilters = () => {
     if (!externalData || externalData.length === 0) return;
     const dataSelect = document.getElementById('interactive-data-select');
     if(dataSelect && dataSelect.options.length === 0) {
-         const fixed = ["ESSAI", "Parcelle", "Variete", "Date", "Heure", "Meteo", "Rep", "Photos", "Observations"];
+         const fixed = ["ESSAI", "Parcelle", "Variete", "Date", "Heure", "Meteo", "Rep", "Photos", "Observations", "Protocole"];
          const keys = Object.keys(externalData[0]).filter(k => !fixed.includes(k) && k !== 'id');
          keys.sort().forEach(k => {
              const opt = document.createElement('option'); opt.value = k; opt.text = k; dataSelect.appendChild(opt);
@@ -664,17 +684,25 @@ window.renderMiniPlan = () => {
 
     let html = `<table id="mini-plan-table"><tbody>`;
 
-    // Boucle inversée pour que la valeur Y la plus haute soit en haut (repère orthonormé)
     for(let r = endY; r >= startY; r--) {
         html += `<tr><td style="background-color: var(--theme-secondary-color); color: white; font-weight: bold;">${r}</td>`;
         for(let c = startX; c <= endX; c++) {
             const p = plots.find(plot => parseInt(plot.Plan_X) === c && parseInt(plot.Plan_Y) === r);
             let classes = ["mini-cell"];
-            let onClick = ""; let cellContent = "";
+            let onClickAttr = ""; let cellContent = "";
 
             if (p) {
                 const codeOriginal = String(p.Code_Essai_Parcelle).padStart(currentDigitCount, '0');
+                const plotProto = p.Protocole || "Sans protocole";
+                const isSelectedProtocol = selectedProtocoles.includes(plotProto);
+
                 let displayContent = p.Type ? p.Type : '';
+
+                if (!isSelectedProtocol) {
+                    classes.push('plot-disabled');
+                } else {
+                    onClickAttr = `onclick="selectFromPlan('${codeOriginal}')"`;
+                }
 
                 if (p.Type === 'M') classes.push('type-M');
                 else if (p.Type === 'F') classes.push('type-F');
@@ -695,15 +723,13 @@ window.renderMiniPlan = () => {
                 }
 
                 cellContent = `${parseInt(p.Code_Essai_Parcelle)}<br><span style="font-size:0.75em; position:relative; z-index:2; display:block; margin-top:2px;">${displayContent}</span>`;
-                onClick = `onclick="selectFromPlan('${codeOriginal}')"`;
             }
 
-            html += `<td class="${classes.join(' ')}" ${onClick}>${cellContent}</td>`;
+            html += `<td class="${classes.join(' ')}" ${onClickAttr}>${cellContent}</td>`;
         }
         html += `</tr>`;
     }
 
-    // Ligne de l'axe X ajoutée tout en bas
     html += `<tr><td style="background-color: var(--theme-secondary-color); color: white; font-weight: bold;">Y\\X</td>`;
     for(let c = startX; c <= endX; c++) {
         html += `<td style="background-color: var(--theme-secondary-color); color: white; font-weight: bold;">${c}</td>`;
@@ -731,7 +757,6 @@ window.selectFromPlan = (code) => {
     if(modal) modal.style.display = 'none';
 };
 
-// CREATION MODULE PHOTO
 function createPhotoModule(isFirst = false) {
     photoModuleCount++;
     const mod = document.createElement('div');
@@ -771,7 +796,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const langSelect = document.getElementById('lang-select');
     if (langSelect) langSelect.value = savedLang;
     
-    // Un léger délai pour s'assurer que translations.js a eu le temps de s'exécuter si chargé asynchronement
     setTimeout(() => applyTranslations(savedLang), 50);
     
     if (localStorage.getItem('newtea_dark_mode') === 'true') {
@@ -779,7 +803,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('dark-mode');
     }
 
-    // Le miniplan est chargé par défaut
     const savedSelectionMode = localStorage.getItem('newtea_selection_mode') || 'miniplan';
     const modeSelect = document.getElementById('selection-mode-toggle');
     if (modeSelect) modeSelect.value = savedSelectionMode;
@@ -790,7 +813,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadLocalObservations();
     setupEventListeners();
 
-    // Initialisation des modules photos
     createPhotoModule(true);
     document.getElementById('add-photo-module-btn').onclick = () => {
         if (document.querySelectorAll('.photo-module').length >= 4) {
@@ -853,9 +875,25 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsText(file);
     });
 
+    // Télécharger modèle CSV du plan de semis
+    document.getElementById('download-template-csv').addEventListener('click', () => {
+        const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type", "Protocole"];
+        let csv = cols.join(";") + "\n";
+        csv += '1;LIGNEE_A;MON_ESSAI;Mais;"43.0,1.2";1;1;M;Proto_1\n';
+        csv += '2;LIGNEE_B;MON_ESSAI;Mais;"43.0,1.2";2;1;F;Proto_1\n';
+        csv += '3;LIGNEE_C;MON_ESSAI;Mais;"43.0,1.2";1;2;F;Proto_2\n';
+        csv += '4;LIGNEE_D;MON_ESSAI;Mais;"43.0,1.2";2;2;M;\n';
+        
+        const a = document.createElement('a'); 
+        a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); 
+        a.download = 'Modele_Plan_Essai.csv'; 
+        a.click();
+    });
+
     document.getElementById('creer-essai').addEventListener('click', () => {
         let name = document.getElementById('new-trial-name').value.trim();
         let esp = document.getElementById('new-trial-espece').value;
+        let proto = document.getElementById('new-trial-protocole').value.trim();
         let maxX = parseInt(document.getElementById('new-trial-x').value);
         let maxY = parseInt(document.getElementById('new-trial-y').value);
 
@@ -868,7 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for(let y=1; y<=maxY; y++) {
             for(let x=1; x<=maxX; x++) {
                 newPlots.push({
-                    Code_Essai_Parcelle: counter++, variete: `Y${y}-X${x}`, Essai: name, Espece: esp, Gps: "", Plan_X: x, Plan_Y: y, Type: ""
+                    Code_Essai_Parcelle: counter++, variete: `Y${y}-X${x}`, Essai: name, Espece: esp, Gps: "", Plan_X: x, Plan_Y: y, Type: "", Protocole: proto
                 });
             }
         }
@@ -877,6 +915,12 @@ document.addEventListener('DOMContentLoaded', () => {
         initEssaiSelector();
         
         document.getElementById('choix-essai').value = name;
+        
+        // Simuler le change pour afficher les protocoles
+        const event = new Event('change');
+        document.getElementById('choix-essai').dispatchEvent(event);
+        
+        // Puis valider
         document.getElementById('confirmer-essai').click();
     });
     
@@ -888,6 +932,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+window.selectAllProtocols = (check) => {
+    document.querySelectorAll('.protocol-checkbox').forEach(cb => cb.checked = check);
+};
+
 function initEssaiSelector() {
     const selector = document.getElementById('choix-essai');
     selector.innerHTML = '<option value="">-- Trial --</option>';
@@ -897,6 +945,31 @@ function initEssaiSelector() {
         const o = document.createElement('option');
         o.value = e; o.textContent = e;
         selector.appendChild(o);
+    });
+
+    selector.addEventListener('change', (e) => {
+        const essai = e.target.value;
+        const container = document.getElementById('protocol-selection-container');
+        const checkboxesDiv = document.getElementById('protocol-checkboxes');
+        checkboxesDiv.innerHTML = '';
+
+        if(!essai) {
+            container.style.display = 'none';
+            return;
+        }
+
+        const plots = varieteData.filter(p => p.Essai === essai);
+        const protocols = [...new Set(plots.map(p => p.Protocole || "Sans protocole"))].sort();
+
+        protocols.forEach(proto => {
+            const id = 'proto_' + proto.replace(/\s+/g, '_');
+            const div = document.createElement('div');
+            div.innerHTML = `<label style="display:flex; align-items:center; font-weight:normal; margin:0; font-size:0.9em; cursor:pointer;">
+                <input type="checkbox" class="protocol-checkbox" value="${proto}" checked style="width:auto; margin:0 8px 0 0;"> ${proto}</label>`;
+            checkboxesDiv.appendChild(div);
+        });
+
+        container.style.display = 'block';
     });
 }
 
@@ -929,7 +1002,10 @@ function buildDigitButtons(count) {
 function generatePlotOrder() {
     currentPlotOrder = [];
     if (!currentEssai) return;
-    const plots = varieteData.filter(p => p.Essai === currentEssai);
+    
+    // Filtrer par Essai ET par Protocole Sélectionné
+    let plots = varieteData.filter(p => p.Essai === currentEssai && selectedProtocoles.includes(p.Protocole || "Sans protocole"));
+
     const hasCoords = plots.every(p => p.Plan_X && p.Plan_Y);
     if (hasCoords) {
         plots.forEach(p => { p.x = parseInt(p.Plan_X); p.y = parseInt(p.Plan_Y); });
@@ -965,6 +1041,8 @@ function updateProgressBar() {
 function handleNavigate(direction) {
     if (!currentEssai) return alert(getT("alert-choix-essai"));
     if (currentPlotOrder.length === 0) generatePlotOrder();
+    if (currentPlotOrder.length === 0) return alert("Aucune parcelle ne correspond aux protocoles sélectionnés.");
+
     const currentCode = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0');
     let idx = currentPlotOrder.indexOf(currentCode);
     if (idx === -1) idx = 0; else idx = (idx + direction + currentPlotOrder.length) % currentPlotOrder.length;
@@ -987,6 +1065,13 @@ function setupEventListeners() {
     document.getElementById('confirmer-essai').onclick = () => {
         currentEssai = document.getElementById('choix-essai').value;
         if (currentEssai) {
+            
+            selectedProtocoles = Array.from(document.querySelectorAll('.protocol-checkbox:checked')).map(cb => cb.value);
+            if(selectedProtocoles.length === 0) {
+                alert("Veuillez sélectionner au moins un protocole à évaluer.");
+                return;
+            }
+
             document.getElementById('session-setup').style.display = 'none';
             document.getElementById('app-container').style.display = 'block';
             
@@ -1149,7 +1234,6 @@ function openSowingPlan() {
     let minX = Math.min(...plots.map(p => parseInt(p.Plan_X))), minY = Math.min(...plots.map(p => parseInt(p.Plan_Y)));
     let maxX = Math.max(...plots.map(p => parseInt(p.Plan_X))), maxY = Math.max(...plots.map(p => parseInt(p.Plan_Y)));
 
-    // border-collapse à "separate" est primordial pour position sticky
     let html = `<div id="sowing-plan-inner-wrapper" style="position:relative; display:inline-block; min-width:100%;">
     <style>
         #sowing-plan-inner-wrapper table { border: none; width: 100%; border-collapse: separate; border-spacing: 0; border-top: 1px solid var(--theme-input-border-color); border-left: 1px solid var(--theme-input-border-color); }
@@ -1160,7 +1244,6 @@ function openSowingPlan() {
         .current-plot-cell { background-color: var(--theme-primary-color) !important; color: white !important; font-weight: bold; box-shadow: inset 0 0 0 2px #fff; }
     </style><table><tbody>`;
 
-    // Boucle inversée pour que la valeur Y la plus haute soit en haut
     for(let r=maxY; r>=minY; r--) {
         html += `<tr><td class="sticky-y" style="background-color: var(--theme-secondary-color); color:white; font-weight:bold;">${r}</td>`;
         for(let c=minX; c<=maxX; c++) {
@@ -1168,31 +1251,43 @@ function openSowingPlan() {
             let codeOriginal = p ? String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') : "";
             let classes = ['plan-cell'];
             let displayContent = (p && p.Type) ? p.Type : '';
-            
-            if(p && todoToggle.checked) {
-                const isDone = appObservations.some(obs => String(obs.Parcelle).padStart(currentDigitCount,'0') === codeOriginal && obs.ESSAI === currentEssai);
-                if(isDone) classes.push('hatched-pattern');
-            }
-
-            if (p && isInteractive && selectedDataKey) {
-                let matches = externalData.filter(d => d.ESSAI === currentEssai && String(d.Parcelle).padStart(currentDigitCount,'0') === codeOriginal);
-                if(matches.length > 0 && matches[0][selectedDataKey]) {
-                    displayContent = `<span class="interactive-val">${matches[0][selectedDataKey]}</span>`;
-                }
-            } 
+            let onClickAttr = "";
+            let inlineStyle = "background:transparent;";
 
             if (p) {
+                const plotProto = p.Protocole || "Sans protocole";
+                const isSelectedProtocol = selectedProtocoles.includes(plotProto);
+
+                if (!isSelectedProtocol) {
+                    classes.push('plot-disabled');
+                    inlineStyle = "cursor:not-allowed;";
+                } else {
+                    inlineStyle = "cursor:pointer;";
+                    onClickAttr = `onclick="selectFromPlan('${codeOriginal}')"`;
+                }
+
+                if(todoToggle.checked) {
+                    const isDone = appObservations.some(obs => String(obs.Parcelle).padStart(currentDigitCount,'0') === codeOriginal && obs.ESSAI === currentEssai);
+                    if(isDone) classes.push('hatched-pattern');
+                }
+
+                if (isInteractive && selectedDataKey && externalData) {
+                    let matches = externalData.filter(d => d.ESSAI === currentEssai && String(d.Parcelle).padStart(currentDigitCount,'0') === codeOriginal);
+                    if(matches.length > 0 && matches[0][selectedDataKey]) {
+                        displayContent = `<span class="interactive-val">${matches[0][selectedDataKey]}</span>`;
+                    }
+                } 
+
                 if (p.Type === 'M') classes.push('type-M'); else if (p.Type === 'F') classes.push('type-F'); else if (p.Type === 'H') classes.push('type-H');
                 if (codeOriginal === selectedPadded) classes.push('current-plot-cell');
             }
 
-            html += `<td class="${classes.join(' ')}" style="${p ? 'cursor:pointer;' : 'background:transparent;'}" data-code="${codeOriginal}" onclick="selectFromPlan('${codeOriginal}')">
+            html += `<td class="${classes.join(' ')}" style="${inlineStyle}" data-code="${codeOriginal}" ${onClickAttr}>
                         ${p ? parseInt(p.Code_Essai_Parcelle) : ""}<br><span style="font-size:0.75em; position:relative; z-index:2;">${displayContent}</span></td>`;
         }
         html += '</tr>';
     }
 
-    // Ligne de l'axe X ajoutée tout en bas avec position sticky-bottom
     html += `<tr><td class="sticky-corner-bottom">Y\\X</td>`;
     for(let c=minX; c<=maxX; c++) html += `<td class="sticky-x-bottom">${c}</td>`;
     html += `</tr>`;
@@ -1276,7 +1371,6 @@ window.insertFreqComment = (txt) => {
     document.getElementById('clear-obs').style.display = 'block';
 };
 
-// Fonction pour l'enregistrement (avec ou sans photo passée en paramètre)
 function enregistrerObservation(moveDir, photoFilename = null, photoPrefix = "", photoNum = "") {
     if (isSaving && !photoFilename) return;
     if (!photoFilename) { isSaving = true; setTimeout(() => { isSaving = false; }, 500); }
@@ -1303,8 +1397,10 @@ function enregistrerObservation(moveDir, photoFilename = null, photoPrefix = "",
     if (fallbackVariete) { fallbackVariete = fallbackVariete.split('(')[0].trim(); } 
     else { fallbackVariete = "Inconnue"; }
 
+    let obsProto = currentPlot ? (currentPlot.Protocole || "") : "";
+
     let obs = {
-        id: Date.now(), Notateur: document.getElementById('type-notation-session').value, ESSAI: currentEssai, Parcelle: parcelleValideeCode,
+        id: Date.now(), Notateur: document.getElementById('type-notation-session').value, ESSAI: currentEssai, Protocole: obsProto, Parcelle: parcelleValideeCode,
         Variete: paramVariete || fallbackVariete,
         Date: document.getElementById('custom-date').value, Heure: document.getElementById('custom-time').value,
         Meteo: document.getElementById('meteo-select').value, Rep: document.getElementById('rep').value, 
@@ -1316,11 +1412,9 @@ function enregistrerObservation(moveDir, photoFilename = null, photoPrefix = "",
     localStorage.setItem('observations_photo_v1', JSON.stringify(appObservations)); 
     renderRecapTable();
     
-    // On efface le champ observation après sauvegarde pour être prêt pour la suite
     document.getElementById('obs').value = "";
     document.getElementById('clear-obs').style.display = "none";
 
-    // Déplacement automatique (si moveDir !== 0)
     let r = document.getElementById('rep');
     if(moveDir !== 0) {
         handleNavigate(moveDir); 
@@ -1328,7 +1422,6 @@ function enregistrerObservation(moveDir, photoFilename = null, photoPrefix = "",
         updateUIForSelectedPlot(selectedPlotCodeForNavigation); 
         r.value = 'A';
     } else {
-        // Incrémente la lettre de la REP *UNIQUEMENT* si ce n'est pas une prise de photo
         if(!photoFilename) {
             r.value = String.fromCharCode(r.value.toUpperCase().charCodeAt(0) + 1);
         }
@@ -1356,7 +1449,7 @@ function loadLocalObservations() { appObservations = JSON.parse(localStorage.get
 
 function generateNotesCSVString() {
     if(!appObservations.length) return null;
-    const finalKeys = ["Notateur", "ESSAI", "Parcelle", "Variete", "Date", "Heure", "Meteo", "Rep", "Prefixe", "Num", "Photos", "Observations"];
+    const finalKeys = ["Notateur", "ESSAI", "Protocole", "Parcelle", "Variete", "Date", "Heure", "Meteo", "Rep", "Prefixe", "Num", "Photos", "Observations"];
     let csv = finalKeys.join(";") + "\n";
     appObservations.forEach(o => { csv += finalKeys.map(k => o[k] === undefined ? "" : o[k]).join(";") + "\n"; });
     return csv;
@@ -1420,7 +1513,7 @@ async function telechargerPlanCSV() {
     const plots = varieteData.filter(p => p.Essai === currentEssai);
     if(plots.length === 0) return alert("Pas de plan.");
 
-    const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type"];
+    const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type", "Protocole"];
     let csv = cols.join(";") + "\n";
     plots.forEach(p => { csv += cols.map(c => p[c] === undefined ? "" : p[c]).join(";") + "\n"; });
     
@@ -1432,7 +1525,7 @@ async function telechargerPlanCSV() {
 
 function telechargerSauvegardeGlobale() {
     if (!varieteData || varieteData.length === 0) return false;
-    const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type"];
+    const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type", "Protocole"];
     let csv = cols.join(";") + "\n";
     varieteData.forEach(p => { csv += cols.map(c => p[c] === undefined ? "" : p[c]).join(";") + "\n"; });
     
@@ -1479,7 +1572,6 @@ window.handlePhotoUpload = (event, inputElement) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Isoler le container du module actif
     const moduleContainer = inputElement.closest('.photo-module');
     const prefixInput = moduleContainer.querySelector('.mod-prefix');
     const numInput = moduleContainer.querySelector('.mod-num');
@@ -1492,18 +1584,18 @@ window.handlePhotoUpload = (event, inputElement) => {
     let pVar = currentPlot ? currentPlot.variete : "Inconnue";
     let px = (currentPlot && currentPlot.Plan_X) ? currentPlot.Plan_X : "X";
     let py = (currentPlot && currentPlot.Plan_Y) ? currentPlot.Plan_Y : "Y";
-    let dateStr = document.getElementById('custom-date').value; // Format AAAA-MM-JJ
+    
+    let dateStr = document.getElementById('custom-date').value; 
+    let annee = dateStr ? dateStr.split('-')[0] : new Date().getFullYear();
 
-    // Nettoyage en conservant les espaces pour la variété (contrairement au nettoyage strict précédent)
     const sanitizeVar = (s) => String(s).replace(/[^a-zA-Z0-9\s-_]/g, '');
     const sanitizeName = (s) => String(s).replace(/[^a-zA-Z0-9-_]/g, '');
 
-    // Format demandé : Variete(Prefixe.Num).Date.(X.Y).Essai.jpg
-    // Exemple : LID 5053L SU(PH.001).2026-04-16.(1.1).Test.jpg
-    const baseName = `${sanitizeVar(pVar)}(${prefix}.${num}).${dateStr}.(${px}.${py}).${sanitizeName(currentEssai)}`;
+    // NOUVEAU Format demandé : LIGNEE.PREFIXE.ESSAI.ANNEE.(X,Y).jpg
+    // Le PREFIXE contient ici le num pour éviter d'écraser la photo si plusieurs sont prises
+    const baseName = `${sanitizeVar(pVar)}.${prefix}${num}.${sanitizeName(currentEssai)}.${annee}.(${px},${py})`;
     const filename = `${baseName}.jpg`;
 
-    // Déclenchement du téléchargement dans la galerie
     const blobUrl = URL.createObjectURL(file);
     const link = document.createElement("a");
     link.href = blobUrl;
@@ -1512,16 +1604,12 @@ window.handlePhotoUpload = (event, inputElement) => {
     link.click();
     document.body.removeChild(link);
 
-    // Incrémenter UNIQUEMENT le numéro de CE module pour la prochaine photo
     numInput.value = parseInt(numInput.value) + 1;
 
-    // Enregistrer la donnée. Dir 0, et passe le filename, prefix et num pour le CSV
     enregistrerObservation(0, filename, prefix, num); 
 
-    // Remettre à zéro l'input file pour permettre la sélection de la même image au besoin
     event.target.value = '';
     
-    // Feedback visuel court spécifique à CE module
     const btn = moduleContainer.querySelector('.photo-module-btn');
     const originalText = btn.innerHTML;
     btn.innerHTML = "✅ PHOTO ENREGISTRÉE !";
