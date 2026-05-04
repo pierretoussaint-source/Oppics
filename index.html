@@ -12,6 +12,7 @@
     <meta name="theme-color" content="#227A49">
     
     <script src="./translations.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
 
     <script>
     if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.protocol === 'http:')) {
@@ -25,7 +26,6 @@
     }
     </script>
     <style>
-        /* Remplacement du zoom par une taille de police racine réduite pour iOS */
         html { font-size: 13px; overflow-x: hidden; }
         body { overflow-x: hidden; font-family: var(--theme-font-family); margin: 0; padding: 15px; background-color: var(--theme-background-color); color: var(--theme-text-color); transition: background-color 0.5s ease, color 0.5s ease; }
         
@@ -41,7 +41,6 @@
             --theme-font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
         }
         
-        /* DARK MODE VARIABLES */
         body.dark-mode {
             --theme-primary-color: #44b543; --theme-secondary-color: #2b9159; 
             --theme-heading-color: #44b543; --theme-button-hover-bg: #2b9159;
@@ -101,7 +100,6 @@
         #dynamic-digit-buttons .square-btn-group { flex-wrap: nowrap !important; overflow: hidden; width: 100%; gap: 2px; }
         #dynamic-digit-buttons .square-btn { flex: 1 1 0; width: auto !important; min-width: 0 !important; padding: 0 !important; }
 
-        /* MINI PLAN CSS */
         #mini-plan-container { overflow-x: auto; margin-bottom: 15px; border-radius: 5px; border: 1px solid var(--theme-input-border-color); background: var(--theme-card-background-color); }
         #mini-plan-table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
         #mini-plan-table th, #mini-plan-table td { border: 1px solid var(--theme-input-border-color); text-align: center; padding: 8px 4px; position: relative; }
@@ -113,8 +111,6 @@
 
         .plot-disabled { background-color: #e0e0e0 !important; color: #a0a0a0 !important; cursor: not-allowed !important; opacity: 0.6; }
 
-        .cube-btn { width: 45px !important; height: 45px !important; padding: 0 !important; margin: 0 !important; display: inline-flex !important; align-items: center; justify-content: center; font-size: 1.8em !important; font-weight: bold !important; border-radius: 10px !important; flex-shrink: 0; line-height: 1; }
-
         .espece-gps-line { display: flex; align-items: center; justify-content: flex-start; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         #voir-sur-carte, #voir-plan-semis { margin: 0; padding: 4px 8px; font-size: 0.85em; width: auto; border-radius: 4px; display:inline-block; }
         #voir-sur-carte { background-color: var(--theme-gps-button-bg); color: var(--theme-gps-button-text); }
@@ -122,20 +118,16 @@
         .modal { display: none; position: fixed; z-index: 100000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
         .modal-content { background-color: var(--theme-card-background-color); margin: 5% auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 800px; border-radius: 8px; max-height: 90vh; overflow-y: auto; }
         
-        .input-inc-dec { display: flex; align-items: center; justify-content: center; margin-bottom: 12px; gap: 10px; }
-        .input-inc-dec input { width: 90px !important; height: 45px !important; margin: 0; text-align: center; font-size: 1.2em; font-weight: bold; box-sizing: border-box; }
-
         .save-buttons-container { display: flex; gap: 5px; margin-top: 15px; }
         .save-buttons-container button { flex: 1; padding: 15px 2px; font-size: 0.85em; line-height: 1.2; text-align: center; white-space: normal; }
 
         .notation-group-container { border: 1px solid var(--theme-input-border-color); padding: 15px; border-radius: 8px; margin-bottom: 15px; background-color: var(--theme-card-background-color); transition: all 0.3s ease; }
         
-        /* Conteneur principal du Sowing Plan */
         #sowing-plan-grid-container { max-height: 60vh; overflow: auto; border: 1px solid var(--theme-input-border-color); position: relative; background: var(--theme-background-color); }
         
-.type-M { background-color: #e3f2fd !important; color:#333 !important; } 
-.type-F { background-color: #e8f5e9 !important; color:#333 !important; } 
-.type-H { background-color: #fff9c4 !important; color:#333 !important; }
+        .type-M { background-color: #e3f2fd !important; color:#333 !important; } 
+        .type-F { background-color: #e8f5e9 !important; color:#333 !important; } 
+        .type-H { background-color: #fff9c4 !important; color:#333 !important; }
         .variete-highlight { font-weight: 900; box-shadow: inset 0 0 0 3px #333; border-radius: 4px; }
         .hatched-pattern { background-image: linear-gradient(45deg, rgba(0,0,0,0.15) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.15) 75%, transparent 75%, transparent); background-size: 8px 8px; }
         .multi-selected { background-color: #e74c3c !important; color: white !important; box-shadow: inset 0 0 0 2px #c0392b !important; }
@@ -166,28 +158,31 @@
 
         .setup-section { border: 1px solid var(--theme-input-border-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; background: var(--theme-card-background-color);}
 
-        /* PHOTO MODULE SPECIFIC */
-        .photo-module-btn {
-            background-color: #2980b9;
+        .photo-module-btn { background-color: #2980b9; color: white; font-size: 1.5em; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .photo-module-btn:hover { background-color: #1f6391; transform: scale(1.02); }
+
+        /* BOUTON QR CODE CIRCULAIRE */
+        .qr-btn {
+            background-color: #e67e22;
             color: white;
-            font-size: 1.5em;
-            padding: 15px;
-            width: 100%;
-            border-radius: 10px;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            transition: 0.3s;
+            border: none;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            font-size: 1.8em;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            margin: 0 auto;
         }
-        .photo-module-btn:hover { background-color: #1f6391; transform: scale(1.02); }
+        .qr-btn:hover { transform: scale(1.1); background-color: #d35400; }
+        .qr-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; margin-bottom: 20px; flex-direction: column; }
+        .qr-wrapper p { margin: 0; font-size: 0.9em; font-weight: bold; color: #e67e22;}
 
-        @media (max-width: 768px) {
-            html { font-size: 12px; }
-            .sidebar, .main-panel { min-width: 100% !important; box-sizing: border-box; }
-        }
+        @media (max-width: 768px) { html { font-size: 12px; } .sidebar, .main-panel { min-width: 100% !important; box-sizing: border-box; } }
     </style>
 </head>
 <body>
@@ -209,11 +204,15 @@
     <input type="text" id="type-notation-session" data-i18n-placeholder="notateur-placeholder" placeholder="Nom du notateur...">
     <hr>
     
+    <div class="qr-wrapper">
+        <button class="qr-btn" onclick="startQRScanner()" title="Scan Direct QR">📷</button>
+        <p>Direct QR Code</p>
+    </div>
+
     <div class="setup-section">
         <h3 data-i18n="h3-noter-existant">Noter un essai existant</h3>
         <select id="choix-essai"></select>
         
-        <!-- MODULE DE SÉLECTION DE PROTOCOLE -->
         <div id="protocol-selection-container" style="display:none; margin-top:10px; padding: 10px; border: 1px solid var(--theme-input-border-color); border-radius: 5px; background: rgba(0,0,0,0.02);">
             <label style="margin-bottom: 5px; font-weight:bold; color:var(--theme-secondary-color);">Protocoles associés (filtre) :</label>
             <div style="display:flex; gap:10px; margin-bottom:10px;">
@@ -281,7 +280,7 @@
 
                 <div class="selector-group"> 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                        <h4 data-i18n="num-parcelle" style="margin: 0;">Numéro de parcelle</h4>
+                        <h4 data-i18n="num-parcelle" style="margin: 0;">Entrée (Ent)</h4>
                         <div class="mode-selection-line" style="display: flex; align-items: center; gap: 5px;">
                             <label for="mode-avancement" style="width:auto; margin:0; font-size:0.8em; color:#666;" data-i18n="mode">Mode:</label>
                             <select id="mode-avancement" onchange="generatePlotOrder()" style="width: auto; min-width: 70px; margin: 0; padding: 4px; font-size: 0.85em;">
@@ -305,26 +304,32 @@
                 <hr>
                 
                 <p id="variete-text" style="font-weight:bold; font-size:1.1em; color:var(--theme-heading-color); margin-bottom: 5px;"><span data-i18n="lignee">Nom / Variété :</span> </p>
-                <div class="espece-gps-line" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 10px; gap: 10px;">
+                <div class="espece-gps-line">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <p id="espece-text" style="margin:0; color:var(--theme-secondary-color); font-weight:bold;"></p>
                         <button id="voir-sur-carte" style="margin:0; padding:4px 8px; font-size:0.85em;"><b>GPS</b></button>
                         <button id="voir-plan-semis" style="display:none; margin:0; padding:4px 8px; font-size:0.85em;" data-i18n="plan-semis">Plan de Semis</button>
                     </div>
                     
-                    <div class="input-inc-dec" style="margin:0; gap: 5px;">
-                        <label for="rep" style="width:auto; margin:0; font-size:0.85em;" data-i18n="rep">Rep :</label>
-                        <button type="button" id="minus-rep" class="btn-secondary cube-btn" style="width: 28px !important; height: 28px !important; font-size: 1.2em !important;">-</button>
-                        <input type="text" id="rep" value="A" maxlength="2" style="width: 35px !important; height: 28px !important; margin:0; padding:0; text-align: center; font-weight: bold;">
-                        <button type="button" id="plus-rep" class="btn-secondary cube-btn" style="width: 28px !important; height: 28px !important; font-size: 1.2em !important;">+</button>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <label style="font-size:0.85em; margin:0; cursor:pointer;" for="toggle-modif-plot">Modif Plot</label>
+                        <label class="switch" style="transform:scale(0.8); margin:0;">
+                            <input type="checkbox" id="toggle-modif-plot" onchange="document.getElementById('not-param').style.display = this.checked ? 'block' : 'none';">
+                            <span class="slider"></span>
+                        </label>
                     </div>
                 </div>
 
                 <hr>
+
+                <div class="qr-wrapper" style="margin-top: 10px; margin-bottom: 25px;">
+                    <button class="qr-btn" onclick="startQRScanner()" title="Scan Direct QR">📷</button>
+                    <p style="font-size: 0.85em; margin-top:5px;">Scan Direct Parcelle (QR Code)</p>
+                </div>
                 
                 <div id="central-notations-container" style="display:block; margin-top:10px;">
                     
-                    <div id="not-param" class="notation-group-container">
+                    <div id="not-param" class="notation-group-container" style="display:none;">
                         <h4 style="margin-bottom: 10px;" data-i18n="h4-param-parc">Paramètres de la Parcelle</h4>
                         <div style="display:flex; flex-direction:column; gap:10px;">
                             <div>
@@ -343,7 +348,6 @@
                         </div>
                     </div>
 
-                    <!-- Conteneur des modules photos indépendants -->
                     <div id="photo-modules-container"></div>
                     
                     <button id="add-photo-module-btn" style="width:100%; margin-top:0px; margin-bottom:15px; border:2px dashed #2980b9; background:transparent; color:#2980b9; font-weight:bold; cursor:pointer; padding:10px; border-radius:8px;">
@@ -378,8 +382,7 @@
                     <table id="recap-table" style="width:100%; border-collapse:collapse;">
                         <thead><tr style="background:#eee; text-align:left;">
                             <th data-i18n="th-essai" style="padding:5px;">Essai</th>
-                            <th data-i18n="th-parc" style="padding:5px;">Parc.</th>
-                            <th data-i18n="th-rep" style="padding:5px;">Rep</th>
+                            <th data-i18n="th-parc" style="padding:5px;">Ent</th>
                             <th style="padding:5px;">Photos</th>
                             <th data-i18n="th-act" style="padding:5px;">Act.</th>
                         </tr></thead>
@@ -465,6 +468,15 @@
     </div>
 </div>
 
+<div id="qrScannerModal" class="modal" style="z-index: 100001;">
+    <div class="modal-content" style="text-align: center; max-width: 500px; padding: 15px;">
+        <h3 style="color: #e67e22;">Scanner QR Code Parcelle</h3>
+        <p style="font-size:0.8em; color:#666; margin-bottom: 10px;">Scannez pour valider automatiquement la parcelle.</p>
+        <div id="qr-reader" style="width: 100%; border-radius: 8px; overflow: hidden; border: 2px solid #ddd;"></div>
+        <button onclick="stopQRScanner()" class="btn-danger btn-block" style="margin-top: 15px;">Fermer la caméra</button>
+    </div>
+</div>
+
 <div id="sowingPlanModal" class="modal" style="z-index: 100000;">
     <div class="modal-content"> 
         <span class="close-button" id="closeSowingPlanModal" style="float:right; font-size:24px; cursor:pointer;">×</span>
@@ -533,10 +545,7 @@ function getT(key) {
     return translations[lang] && translations[lang][key] ? translations[lang][key] : key;
 }
 
-// ==========================================
-// GLOBAL VARIABLES & INITIALIZATION
-// ==========================================
-const rawCsvData = `Code_Essai_Parcelle,variete,Essai,Espece,Gps,Plan_X,Plan_Y,Type,Protocole
+const rawCsvData = `Ent,variete,Essai,Espece,Gps,Plan_X,Plan_Y,Type,Protocole
 1,LID 5053L SU,Test,Tournesol,"43.69,1.27",1,1,H,Proto_A
 2,MYLADY,Test,Mais,"43.47,-0.34",2,1,F,Proto_A
 3,LID PANDORE,Test,Sorgho,"41.75,-0.79",3,1,M,Proto_B
@@ -544,16 +553,20 @@ const rawCsvData = `Code_Essai_Parcelle,variete,Essai,Espece,Gps,Plan_X,Plan_Y,T
 5,LID TRETO,Test,Colza,"44.39,1.39",2,2,H,Proto_B
 6,LID 5053L SU,Test,Tournesol,"0.0,0.0",3,2,M,Proto_A
 7,ISIDOR,Test,Soja,"0.0,0.0",1,3,M,Proto_B
-8,MYLADY,Test,Mais,"0.0,0.0",2,3,F,
+2,MYLADY,Test,Mais,"0.0,0.0",2,3,F,
 9,LID TRETO,Test,Colza,"0.0,0.0",3,3,H,Proto_A
 10,LID PANDORE,Test,Sorgho,"41.75,-0.79",5,6,M,Proto_C`;
 
-let varieteData = [], appObservations = [], currentEssai = null, currentDigitCount = 3, currentParcelleArray = ['0','0','0'], selectedPlotCodeForNavigation = null, currentEspece = null, currentGps = null, parcelleValideeCode = null, currentPlotOrder = [];
+let varieteData = [], appObservations = [], currentEssai = null, currentDigitCount = 3, currentParcelleArray = ['0','0','0'], selectedPlotUuid = null, currentEspece = null, currentGps = null, parcelleValideeUuid = null, currentPlotOrder = [];
 let externalData = []; 
 let selectedProtocoles = []; 
 let isSaving = false;
 let photoModuleCount = 0;
+let html5QrcodeScanner = null; // Variable pour le Scanner QR
 
+function generateUUID() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
 
 function playSuccessSound() {
     try {
@@ -589,6 +602,7 @@ function parseCSVToObjects(csvString, delimiter = ';') {
         if(currentline.length >= 1 && lines[i].trim() !== "") {
             const obj = {};
             headers.forEach((h, idx) => { obj[h] = cleanVal(currentline[idx]); });
+            if(!obj._uuid) obj._uuid = generateUUID(); 
             objects.push(obj);
         }
     }
@@ -600,6 +614,7 @@ function loadVarieteDataLocal() {
     const defaultTestTrial = parseCSVToObjects(rawCsvData, ',');
     if (saved) {
         varieteData = JSON.parse(saved);
+        varieteData.forEach(p => { if(!p._uuid) p._uuid = generateUUID(); });
         if (!varieteData.some(p => p.Essai === 'Test')) {
             varieteData = defaultTestTrial.concat(varieteData);
             saveVarieteDataLocal();
@@ -643,7 +658,7 @@ window.populateInteractiveFilters = () => {
     if (!externalData || externalData.length === 0) return;
     const dataSelect = document.getElementById('interactive-data-select');
     if(dataSelect && dataSelect.options.length === 0) {
-         const fixed = ["ESSAI", "Parcelle", "Variete", "Date", "Heure", "Meteo", "Rep", "Photos", "Observations", "Protocole"];
+         const fixed = ["ESSAI", "Ent", "Variete", "Date", "Heure", "Meteo", "Photos", "Observations", "Protocole"];
          const keys = Object.keys(externalData[0]).filter(k => !fixed.includes(k) && k !== 'id');
          keys.sort().forEach(k => {
              const opt = document.createElement('option'); opt.value = k; opt.text = k; dataSelect.appendChild(opt);
@@ -662,8 +677,7 @@ window.renderMiniPlan = () => {
         return;
     }
 
-    const currentPadded = String(selectedPlotCodeForNavigation).padStart(currentDigitCount, '0');
-    const currentPlot = plots.find(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount, '0') === currentPadded);
+    const currentPlot = plots.find(p => p._uuid === selectedPlotUuid);
     
     let curX = currentPlot ? parseInt(currentPlot.Plan_X) : 1;
     let curY = currentPlot ? parseInt(currentPlot.Plan_Y) : 1;
@@ -692,7 +706,8 @@ window.renderMiniPlan = () => {
             let onClickAttr = ""; let cellContent = "";
 
             if (p) {
-                const codeOriginal = String(p.Code_Essai_Parcelle).padStart(currentDigitCount, '0');
+                const plotUuid = p._uuid;
+                const plotEnt = p.Ent ? String(p.Ent).padStart(currentDigitCount, '0') : "";
                 const plotProto = p.Protocole || "Sans protocole";
                 const isSelectedProtocol = selectedProtocoles.includes(plotProto);
 
@@ -701,28 +716,28 @@ window.renderMiniPlan = () => {
                 if (!isSelectedProtocol) {
                     classes.push('plot-disabled');
                 } else {
-                    onClickAttr = `onclick="selectFromPlan('${codeOriginal}')"`;
+                    onClickAttr = `onclick="selectFromPlan('${plotUuid}')"`;
                 }
 
                 if (p.Type === 'M') classes.push('type-M');
                 else if (p.Type === 'F') classes.push('type-F');
                 else if (p.Type === 'H') classes.push('type-H');
 
-                if (codeOriginal === currentPadded) classes.push("mini-selected");
+                if (plotUuid === selectedPlotUuid) classes.push("mini-selected");
 
                 if (todoMode) {
-                    const isDone = appObservations.some(obs => String(obs.Parcelle).padStart(currentDigitCount,'0') === codeOriginal && obs.ESSAI === currentEssai);
+                    const isDone = appObservations.some(obs => String(obs.Ent).padStart(currentDigitCount,'0') === plotEnt && obs.ESSAI === currentEssai);
                     if(isDone) classes.push('hatched-pattern');
                 }
 
                 if (isInteractive && selectedDataKey && externalData) {
-                    let matches = externalData.filter(d => d.ESSAI === currentEssai && String(d.Parcelle).padStart(currentDigitCount,'0') === codeOriginal);
+                    let matches = externalData.filter(d => d.ESSAI === currentEssai && String(d.Ent).padStart(currentDigitCount,'0') === plotEnt);
                     if(matches.length > 0 && matches[0][selectedDataKey]) {
                         displayContent = `<span class="interactive-val" style="font-size:0.9em; padding:1px; line-height:1;">${matches[0][selectedDataKey]}</span>`;
                     }
                 }
 
-                cellContent = `${parseInt(p.Code_Essai_Parcelle)}<br><span style="font-size:0.75em; position:relative; z-index:2; display:block; margin-top:2px;">${displayContent}</span>`;
+                cellContent = `${parseInt(p.Ent || 0)}<br><span style="font-size:0.75em; position:relative; z-index:2; display:block; margin-top:2px;">${displayContent}</span>`;
             }
 
             html += `<td class="${classes.join(' ')}" ${onClickAttr}>${cellContent}</td>`;
@@ -740,10 +755,10 @@ window.renderMiniPlan = () => {
     container.innerHTML = html;
 };
 
-window.selectFromPlan = (code) => {
-    selectedPlotCodeForNavigation = String(code).padStart(currentDigitCount, '0');
-    updateUIForSelectedPlot(selectedPlotCodeForNavigation);
-    parcelleValideeCode = null;
+window.selectFromPlan = (uuid) => {
+    selectedPlotUuid = uuid;
+    updateUIForSelectedPlot(selectedPlotUuid);
+    parcelleValideeUuid = null;
     document.getElementById('valider-parcelle').style.display = 'block';
     
     const notationArea = document.getElementById('central-notations-container');
@@ -779,7 +794,7 @@ function createPhotoModule(isFirst = false) {
             <label style="display:none; width:auto; margin:0; margin-left:10px;">Num:</label>
             <input type="number" class="mod-num" value="1" min="1" style="display:none; width:80px !important; margin:0;">
         </div>
-        <button class="photo-module-btn" onclick="if(!parcelleValideeCode){alert('Veuillez valider une parcelle d\\'abord.'); return;} this.nextElementSibling.click()">
+        <button class="photo-module-btn" onclick="if(!parcelleValideeUuid){alert('Veuillez valider une parcelle d\\'abord.'); return;} this.nextElementSibling.click()">
             <span>📷</span> PRENDRE LA PHOTO
         </button>
         <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoUpload(event, this)">
@@ -787,6 +802,100 @@ function createPhotoModule(isFirst = false) {
     `;
     document.getElementById('photo-modules-container').appendChild(mod);
 }
+
+// === LOGIQUE DU SCANNER QR CODE ===
+
+window.startQRScanner = () => {
+    document.getElementById('qrScannerModal').style.display = 'block';
+    if (!html5QrcodeScanner) {
+        html5QrcodeScanner = new Html5Qrcode("qr-reader");
+    }
+    
+    // Configurations de scan adaptées mobile (caméra arrière)
+    html5QrcodeScanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        (decodedText, decodedResult) => {
+            handleQRScanSuccess(decodedText);
+        },
+        (errorMessage) => {
+            // Log silencieux pour les trames illisibles en mouvement
+        }
+    ).catch(err => {
+        alert("Erreur d'accès à la caméra. Vérifiez les permissions.");
+        document.getElementById('qrScannerModal').style.display = 'none';
+    });
+};
+
+window.stopQRScanner = () => {
+    if (html5QrcodeScanner) {
+        html5QrcodeScanner.stop().then(() => {
+            document.getElementById('qrScannerModal').style.display = 'none';
+        }).catch(err => {
+            document.getElementById('qrScannerModal').style.display = 'none';
+        });
+    } else {
+        document.getElementById('qrScannerModal').style.display = 'none';
+    }
+};
+
+function handleQRScanSuccess(decodedText) {
+    stopQRScanner();
+
+    // Expression régulière pour parser les données (flexible sur les espaces)
+    const lieuMatch = decodedText.match(/LIEU\s*:\s*([^,\n\r]+)/i);
+    const xMatch = decodedText.match(/X\s*=\s*(\d+)/i);
+    const yMatch = decodedText.match(/Y\s*=\s*(\d+)/i);
+
+    if (lieuMatch && xMatch && yMatch) {
+        const essai = lieuMatch[1].trim();
+        const x = parseInt(xMatch[1].trim());
+        const y = parseInt(yMatch[1].trim());
+
+        // Chercher la parcelle correspondante dans la BDD
+        const plot = varieteData.find(p => p.Essai === essai && parseInt(p.Plan_X) === x && parseInt(p.Plan_Y) === y);
+
+        if (plot) {
+            playSuccessSound();
+
+            // S'il s'agit d'un essai différent, on navigue vers celui-ci
+            if (currentEssai !== essai) {
+                document.getElementById('choix-essai').value = essai;
+                const event = new Event('change');
+                document.getElementById('choix-essai').dispatchEvent(event);
+                selectAllProtocols(true); // Active tous les protocoles de ce nouvel essai par précaution
+                document.getElementById('confirmer-essai').click();
+            }
+
+            // Forcer l'affichage de l'onglet "Appareil Photo" (Note) si on était sur Home ou Config
+            document.querySelectorAll('.tabcontent').forEach(x=>x.style.display='none');
+            document.querySelectorAll('.tablink').forEach(x=>x.classList.remove('active'));
+            document.getElementById('Note').style.display='block';
+            document.getElementById('defaultOpen').classList.add('active');
+
+            // Sélectionner la parcelle
+            selectedPlotUuid = plot._uuid;
+            updateUIForSelectedPlot(selectedPlotUuid);
+
+            // Valider la parcelle automatiquement
+            parcelleValideeUuid = selectedPlotUuid;
+            document.getElementById('valider-parcelle').style.display = 'none';
+            
+            const notationArea = document.getElementById('central-notations-container');
+            const obsArea = document.getElementById('obs').parentNode;
+            const saveArea = document.getElementById('save-buttons-placeholder');
+            [notationArea, obsArea, saveArea].forEach(el => {
+                if(el) { el.style.opacity = '1'; el.style.pointerEvents = 'auto'; }
+            });
+
+        } else {
+            alert(`Parcelle introuvable dans la base de données pour l'essai "${essai}" (X: ${x}, Y: ${y})`);
+        }
+    } else {
+        alert("Format du QR Code invalide. Exemple attendu:\nLIEU : Test\nY= 1\nX = 2\n\nContenu scanné :\n" + decodedText);
+    }
+}
+// ==========================================
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -874,7 +983,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('download-template-csv').addEventListener('click', () => {
-        const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type", "Protocole"];
+        const cols = ["Ent", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type", "Protocole"];
         let csv = cols.join(";") + "\n";
         csv += '1;LIGNEE_A;MON_ESSAI;Mais;"43.0,1.2";1;1;M;Proto_1\n';
         csv += '2;LIGNEE_B;MON_ESSAI;Mais;"43.0,1.2";2;1;F;Proto_1\n';
@@ -903,7 +1012,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for(let y=1; y<=maxY; y++) {
             for(let x=1; x<=maxX; x++) {
                 newPlots.push({
-                    Code_Essai_Parcelle: counter++, variete: `Y${y}-X${x}`, Essai: name, Espece: esp, Gps: "", Plan_X: x, Plan_Y: y, Type: "", Protocole: proto
+                    _uuid: generateUUID(), Ent: counter++, variete: `Y${y}-X${x}`, Essai: name, Espece: esp, Gps: "", Plan_X: x, Plan_Y: y, Type: "", Protocole: proto
                 });
             }
         }
@@ -984,8 +1093,11 @@ function buildDigitButtons(count) {
                 rowDiv.querySelectorAll('.selected').forEach(s=>s.classList.remove('selected'));
                 b.classList.add('selected');
                 currentParcelleArray[row] = String(i);
-                selectedPlotCodeForNavigation = currentParcelleArray.join('');
-                updateUIForSelectedPlot(selectedPlotCodeForNavigation);
+                
+                let enteredEnt = currentParcelleArray.join('');
+                let plot = varieteData.find(p => p.Essai === currentEssai && String(p.Ent).padStart(currentDigitCount,'0') === enteredEnt);
+                selectedPlotUuid = plot ? plot._uuid : null;
+                updateUIForSelectedPlot(selectedPlotUuid, enteredEnt);
             };
             rowDiv.appendChild(b);
         }
@@ -1009,10 +1121,10 @@ function generatePlotOrder() {
             case 'U': plots.sort((a,b) => { if (a.x !== b.x) return a.x - b.x; return (a.x % 2 !== 0) ? (a.y - b.y) : (b.y - a.y); }); break;
             case 'N': plots.sort((a,b) => (a.x - b.x) || (a.y - b.y)); break;
         }
-        currentPlotOrder = plots.map(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0'));
     } else {
-        currentPlotOrder = plots.map(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0')).sort();
+        plots.sort((a,b) => parseInt(a.Ent) - parseInt(b.Ent));
     }
+    currentPlotOrder = plots.map(p => p._uuid);
     updateProgressBar();
 }
 
@@ -1022,9 +1134,14 @@ function updateProgressBar() {
         document.getElementById('trial-progress-text').innerText = '0 / 0 (0%)';
         return;
     }
-    const donePlots = new Set(appObservations.filter(o => o.ESSAI === currentEssai).map(o => String(o.Parcelle).padStart(currentDigitCount,'0')));
+    const doneEnts = new Set(appObservations.filter(o => o.ESSAI === currentEssai).map(o => String(o.Ent)));
     let validDoneCount = 0;
-    currentPlotOrder.forEach(code => { if(donePlots.has(code)) validDoneCount++; });
+    
+    currentPlotOrder.forEach(uuid => { 
+        let plot = varieteData.find(p => p._uuid === uuid);
+        if (plot && doneEnts.has(String(plot.Ent))) validDoneCount++; 
+    });
+    
     const total = currentPlotOrder.length;
     const percent = total > 0 ? Math.round((validDoneCount / total) * 100) : 0;
     document.getElementById('trial-progress-bar').style.width = percent + '%';
@@ -1036,12 +1153,12 @@ function handleNavigate(direction) {
     if (currentPlotOrder.length === 0) generatePlotOrder();
     if (currentPlotOrder.length === 0) return alert("Aucune parcelle ne correspond aux protocoles sélectionnés.");
 
-    const currentCode = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0');
-    let idx = currentPlotOrder.indexOf(currentCode);
+    let idx = currentPlotOrder.indexOf(selectedPlotUuid);
     if (idx === -1) idx = 0; else idx = (idx + direction + currentPlotOrder.length) % currentPlotOrder.length;
-    selectedPlotCodeForNavigation = currentPlotOrder[idx];
-    updateUIForSelectedPlot(selectedPlotCodeForNavigation);
-    parcelleValideeCode = null;
+    
+    selectedPlotUuid = currentPlotOrder[idx];
+    updateUIForSelectedPlot(selectedPlotUuid);
+    parcelleValideeUuid = null;
     document.getElementById('valider-parcelle').style.display = 'block';
     
     const notationArea = document.getElementById('central-notations-container');
@@ -1069,24 +1186,23 @@ function setupEventListeners() {
             document.getElementById('app-container').style.display = 'block';
             
             const plotsInTrial = varieteData.filter(p => p.Essai === currentEssai);
-            const maxPlotNum = Math.max(0, ...plotsInTrial.map(p => parseInt(p.Code_Essai_Parcelle) || 0));
+            const maxPlotNum = Math.max(0, ...plotsInTrial.map(p => parseInt(p.Ent) || 0));
             if (maxPlotNum <= 99) currentDigitCount = 2;
             else if (maxPlotNum <= 999) currentDigitCount = 3;
             else currentDigitCount = 4;
             
             buildDigitButtons(currentDigitCount);
             generatePlotOrder();
-            selectedPlotCodeForNavigation = currentPlotOrder[0] || "0".repeat(currentDigitCount);
-            updateUIForSelectedPlot(selectedPlotCodeForNavigation);
+            selectedPlotUuid = currentPlotOrder[0] || null;
+            updateUIForSelectedPlot(selectedPlotUuid);
         } else {
             alert(getT("alert-choix-essai"));
         }
     };
     
     document.getElementById('valider-parcelle').onclick = () => {
-        parcelleValideeCode = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0');
+        parcelleValideeUuid = selectedPlotUuid;
         document.getElementById('valider-parcelle').style.display = 'none';
-        document.getElementById('rep').value = 'A';
         
         const notationArea = document.getElementById('central-notations-container');
         const obsArea = document.getElementById('obs').parentNode;
@@ -1153,25 +1269,22 @@ function setupEventListeners() {
             setTimeout(() => { localStorage.removeItem('newtea_trials'); location.reload(); }, 1500);
         }
     };
-
-    document.getElementById('plus-rep').onclick = () => { let el = document.getElementById('rep'); el.value = String.fromCharCode(el.value.charCodeAt(0)+1); };
-    document.getElementById('minus-rep').onclick = () => { let el = document.getElementById('rep'); el.value = String.fromCharCode(Math.max(65, el.value.charCodeAt(0)-1)); };
 }
 
-function updateUIForSelectedPlot(code) {
-    const padded = String(code).padStart(currentDigitCount,'0');
-    currentParcelleArray = padded.split('');
+function updateUIForSelectedPlot(uuid, fallbackEnt = null) {
+    const plot = uuid ? varieteData.find(i => i._uuid === uuid) : null;
+    const paddedEnt = plot ? String(plot.Ent).padStart(currentDigitCount, '0') : (fallbackEnt || "0".repeat(currentDigitCount));
+    
+    currentParcelleArray = paddedEnt.split('');
     
     for(let row = 0; row < currentDigitCount; row++) {
         const div = document.getElementById('digit-row-' + row);
         if(div) {
             div.querySelectorAll('.selected').forEach(s=>s.classList.remove('selected'));
-            for(let b of div.children) if(b.textContent === padded[row]) b.classList.add('selected');
+            for(let b of div.children) if(b.textContent === currentParcelleArray[row]) b.classList.add('selected');
         }
     }
 
-    const plot = varieteData.find(i => String(i.Code_Essai_Parcelle).padStart(currentDigitCount,'0') === padded && i.Essai === currentEssai);
-    
     let coordsSuffix = "";
     if (plot && plot.Plan_Y && plot.Plan_X) {
         coordsSuffix = ` <span style="font-size:0.85em; color:#7f8c8d;">(${String(plot.Plan_Y).padStart(3, '0')},${String(plot.Plan_X).padStart(3, '0')})</span>`;
@@ -1193,7 +1306,7 @@ function updateUIForSelectedPlot(code) {
     const plots = varieteData.filter(p => p.Essai === currentEssai);
     document.getElementById('voir-plan-semis').style.display = (plots.length > 0 && plots[0].Plan_X) ? 'inline-block' : 'none';
     
-    const isValide = (parcelleValideeCode === padded);
+    const isValide = (parcelleValideeUuid !== null && parcelleValideeUuid === uuid);
     document.getElementById('valider-parcelle').style.display = isValide ? 'none' : 'block';
     
     const notationArea = document.getElementById('central-notations-container');
@@ -1225,7 +1338,6 @@ function openSowingPlan() {
 
     const isInteractive = toggle.checked;
     const selectedDataKey = document.getElementById('interactive-data-select')?.value;
-    const selectedPadded = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0');
     
     let minX = Math.min(...plots.map(p => parseInt(p.Plan_X))), minY = Math.min(...plots.map(p => parseInt(p.Plan_Y)));
     let maxX = Math.max(...plots.map(p => parseInt(p.Plan_X))), maxY = Math.max(...plots.map(p => parseInt(p.Plan_Y)));
@@ -1248,7 +1360,8 @@ function openSowingPlan() {
         html += `<tr><td class="sticky-y">${r}</td>`;
         for(let c=minX; c<=maxX; c++) {
             const p = plots.find(plot => parseInt(plot.Plan_X) === c && parseInt(plot.Plan_Y) === r);
-            let codeOriginal = p ? String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') : "";
+            let codeOriginal = p ? p._uuid : "";
+            let plotEnt = (p && p.Ent) ? String(p.Ent).padStart(currentDigitCount, '0') : "";
             let classes = ['plan-cell'];
             let displayContent = (p && p.Type) ? p.Type : '';
             let onClickAttr = "";
@@ -1265,23 +1378,23 @@ function openSowingPlan() {
                 }
 
                 if(todoToggle.checked) {
-                    const isDone = appObservations.some(obs => String(obs.Parcelle).padStart(currentDigitCount,'0') === codeOriginal && obs.ESSAI === currentEssai);
+                    const isDone = appObservations.some(obs => String(obs.Ent).padStart(currentDigitCount,'0') === plotEnt && obs.ESSAI === currentEssai);
                     if(isDone) classes.push('hatched-pattern');
                 }
 
                 if (isInteractive && selectedDataKey && externalData) {
-                    let matches = externalData.filter(d => d.ESSAI === currentEssai && String(d.Parcelle).padStart(currentDigitCount,'0') === codeOriginal);
+                    let matches = externalData.filter(d => d.ESSAI === currentEssai && String(d.Ent).padStart(currentDigitCount,'0') === plotEnt);
                     if(matches.length > 0 && matches[0][selectedDataKey]) {
                         displayContent = `<span class="interactive-val">${matches[0][selectedDataKey]}</span>`;
                     }
                 } 
 
                 if (p.Type === 'M') classes.push('type-M'); else if (p.Type === 'F') classes.push('type-F'); else if (p.Type === 'H') classes.push('type-H');
-                if (codeOriginal === selectedPadded) classes.push('current-plot-cell');
+                if (codeOriginal === selectedPlotUuid) classes.push('current-plot-cell');
             }
 
             html += `<td class="${classes.join(' ')}" data-code="${codeOriginal}" ${onClickAttr}>
-                        ${p ? parseInt(p.Code_Essai_Parcelle) : ""}<br><span style="font-size:0.75em; position:relative; z-index:2;">${displayContent}</span></td>`;
+                        ${p ? parseInt(p.Ent || 0) : ""}<br><span style="font-size:0.75em; position:relative; z-index:2;">${displayContent}</span></td>`;
         }
         html += '</tr>';
     }
@@ -1323,8 +1436,8 @@ window.drawMovementPath = () => {
     if (currentPlotOrder.length === 0) generatePlotOrder();
 
     let prevX = null, prevY = null;
-    currentPlotOrder.forEach(code => {
-        const cell = container.querySelector(`td[data-code="${code}"]`);
+    currentPlotOrder.forEach(uuid => {
+        const cell = container.querySelector(`td[data-code="${uuid}"]`);
         if (cell) {
             const cellX = cell.offsetLeft + (cell.offsetWidth / 2);
             const cellY = cell.offsetTop + (cell.offsetHeight / 2);
@@ -1377,14 +1490,14 @@ function enregistrerObservation(moveDir, photoFilename = null, photoPrefix = "",
     if (isSaving && !photoFilename) return;
     if (!photoFilename) { isSaving = true; setTimeout(() => { isSaving = false; }, 500); }
 
-    if (!parcelleValideeCode) return alert(getT("alert-valider-parcelle"));
+    if (!parcelleValideeUuid) return alert(getT("alert-valider-parcelle"));
 
     playSuccessSound();
 
     let paramVariete = document.getElementById('param-variete').value.trim();
     let paramType = document.getElementById('param-type').value;
 
-    let currentPlot = varieteData.find(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') === parcelleValideeCode && p.Essai === currentEssai);
+    let currentPlot = varieteData.find(p => p._uuid === parcelleValideeUuid);
     if(currentPlot) {
         let updated = false;
         if(paramVariete && paramVariete !== currentPlot.variete) { currentPlot.variete = paramVariete; updated = true; }
@@ -1400,12 +1513,13 @@ function enregistrerObservation(moveDir, photoFilename = null, photoPrefix = "",
     else { fallbackVariete = "Inconnue"; }
 
     let obsProto = currentPlot ? (currentPlot.Protocole || "") : "";
+    let obsEnt = currentPlot ? currentPlot.Ent : currentParcelleArray.join('');
 
     let obs = {
-        id: Date.now(), Notateur: document.getElementById('type-notation-session').value, ESSAI: currentEssai, Protocole: obsProto, Parcelle: parcelleValideeCode,
+        id: Date.now(), Notateur: document.getElementById('type-notation-session').value, ESSAI: currentEssai, Protocole: obsProto, Ent: obsEnt,
         Variete: paramVariete || fallbackVariete,
         Date: document.getElementById('custom-date').value, Heure: document.getElementById('custom-time').value,
-        Meteo: document.getElementById('meteo-select').value, Rep: document.getElementById('rep').value, 
+        Meteo: document.getElementById('meteo-select').value, 
         Prefixe: photoPrefix, Num: photoNum,
         Observations: obsText, Photos: photoFilename || ""
     };
@@ -1417,17 +1531,9 @@ function enregistrerObservation(moveDir, photoFilename = null, photoPrefix = "",
     document.getElementById('obs').value = "";
     document.getElementById('clear-obs').style.display = "none";
 
-    let r = document.getElementById('rep');
     if(moveDir !== 0) {
         handleNavigate(moveDir); 
-        parcelleValideeCode = String(selectedPlotCodeForNavigation).padStart(currentDigitCount,'0'); 
-        updateUIForSelectedPlot(selectedPlotCodeForNavigation); 
-        r.value = 'A';
-    } else {
-        if(!photoFilename) {
-            r.value = String.fromCharCode(r.value.toUpperCase().charCodeAt(0) + 1);
-        }
-    }
+    } 
     
     updateProgressBar();
     renderMiniPlan(); 
@@ -1435,7 +1541,7 @@ function enregistrerObservation(moveDir, photoFilename = null, photoPrefix = "",
 
 function renderRecapTable() {
     const tbody = document.querySelector('#recap-table tbody'); if(!tbody) return;
-    tbody.innerHTML = appObservations.map(o => `<tr><td>${o.ESSAI}</td><td>${o.Parcelle}</td><td>${o.Rep}</td><td style="font-size:0.8em; word-break:break-all;">${o.Photos||'-'}</td><td><button onclick="delObs(${o.id})" class="btn-danger" style="margin:0;padding:2px 6px; font-weight:bold;">X</button></td></tr>`).join('');
+    tbody.innerHTML = appObservations.map(o => `<tr><td>${o.ESSAI}</td><td>${o.Ent}</td><td style="font-size:0.8em; word-break:break-all;">${o.Photos||'-'}</td><td><button onclick="delObs(${o.id})" class="btn-danger" style="margin:0;padding:2px 6px; font-weight:bold;">X</button></td></tr>`).join('');
 }
 
 window.delObs = (id) => { if(confirm("Supprimer cette observation ?")) { appObservations = appObservations.filter(o => o.id !== id); localStorage.setItem('observations_photo_v1', JSON.stringify(appObservations)); renderRecapTable(); updateProgressBar(); } };
@@ -1451,7 +1557,7 @@ function loadLocalObservations() { appObservations = JSON.parse(localStorage.get
 
 function generateNotesCSVString() {
     if(!appObservations.length) return null;
-    const finalKeys = ["Notateur", "ESSAI", "Protocole", "Parcelle", "Variete", "Date", "Heure", "Meteo", "Rep", "Prefixe", "Num", "Photos", "Observations"];
+    const finalKeys = ["Notateur", "ESSAI", "Protocole", "Ent", "Variete", "Date", "Heure", "Meteo", "Prefixe", "Num", "Photos", "Observations"];
     let csv = finalKeys.join(";") + "\n";
     appObservations.forEach(o => { csv += finalKeys.map(k => o[k] === undefined ? "" : o[k]).join(";") + "\n"; });
     return csv;
@@ -1515,7 +1621,7 @@ async function telechargerPlanCSV() {
     const plots = varieteData.filter(p => p.Essai === currentEssai);
     if(plots.length === 0) return alert("Pas de plan.");
 
-    const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type", "Protocole"];
+    const cols = ["Ent", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type", "Protocole"];
     let csv = cols.join(";") + "\n";
     plots.forEach(p => { csv += cols.map(c => p[c] === undefined ? "" : p[c]).join(";") + "\n"; });
     
@@ -1527,7 +1633,7 @@ async function telechargerPlanCSV() {
 
 function telechargerSauvegardeGlobale() {
     if (!varieteData || varieteData.length === 0) return false;
-    const cols = ["Code_Essai_Parcelle", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type", "Protocole"];
+    const cols = ["Ent", "variete", "Essai", "Espece", "Gps", "Plan_X", "Plan_Y", "Type", "Protocole"];
     let csv = cols.join(";") + "\n";
     varieteData.forEach(p => { csv += cols.map(c => p[c] === undefined ? "" : p[c]).join(";") + "\n"; });
     
@@ -1579,48 +1685,42 @@ window.handlePhotoUpload = (event, inputElement) => {
 
     const prefix = prefixInput.value || "PH";
     
-    // --- NOUVELLE LOGIQUE DE COMPTEUR INVISIBLE ---
     let dateStr = document.getElementById('custom-date').value || new Date().toISOString().split('T')[0];
     
-    // Récupération des compteurs sauvegardés, ou initialisation si vide
     let countersStorage = JSON.parse(localStorage.getItem('oppics_photo_counters') || '{"date":"", "prefixes":{}}');
     
-    // Si la date a changé, on réinitialise l'objet des compteurs
     if (countersStorage.date !== dateStr) {
         countersStorage = { date: dateStr, prefixes: {} };
     }
 
-    // Si ce préfixe n'a pas encore de compteur pour aujourd'hui, on l'initialise à 0
     if (!countersStorage.prefixes[prefix]) {
         countersStorage.prefixes[prefix] = 0;
     }
     
-    // On incrémente le compteur pour ce préfixe précis
     countersStorage.prefixes[prefix]++;
     
-    // On sauvegarde la nouvelle valeur
     localStorage.setItem('oppics_photo_counters', JSON.stringify(countersStorage));
 
-    // Formatage avec 4 zéros (ex: 0001, 0002, 0015...)
     let currentCountPadded = String(countersStorage.prefixes[prefix]).padStart(4, '0');
-    // ----------------------------------------------
     
-    let currentPlot = varieteData.find(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') === parcelleValideeCode && p.Essai === currentEssai);
+    let currentPlot = varieteData.find(p => p._uuid === parcelleValideeUuid);
     
     let pVar = currentPlot ? currentPlot.variete : "Inconnue";
     let px = (currentPlot && currentPlot.Plan_X) ? currentPlot.Plan_X : "X";
     let py = (currentPlot && currentPlot.Plan_Y) ? currentPlot.Plan_Y : "Y";
+    let cEspece = currentPlot ? currentPlot.Espece : currentEspece;
     
+    let espLetters = { 'Mais': 'M', 'Tournesol': 'T', 'Colza': 'C', 'Soja': 'SOY', 'Sorgho': 'SOR' };
+    let espLetter = espLetters[cEspece] || 'X';
+
     let annee = dateStr ? dateStr.split('-')[0] : new Date().getFullYear();
 
     const sanitizeVar = (s) => String(s).replace(/[^a-zA-Z0-9\s-_]/g, '');
     const sanitizeName = (s) => String(s).replace(/[^a-zA-Z0-9-_]/g, '');
 
-    // Format demandé avec le compteur à la fin : LIGNEE.PREFIXE.ESSAI.ANNEE.(X,Y).0001.jpg
-    const baseName = `${sanitizeVar(pVar)}.${prefix}.${sanitizeName(currentEssai)}.${annee}.(${px},${py})`;
-    const filename = `${baseName}.${currentCountPadded}.jpg`;
+    const baseName = `${sanitizeVar(pVar)}_${prefix}_${annee}_${sanitizeName(currentEssai)}_OPP_(${py},${px})`;
+    const filename = `${baseName}_${currentCountPadded}_${espLetter}.jpg`;
 
-    // Déclenchement du téléchargement manuel
     const blobUrl = URL.createObjectURL(file);
     const link = document.createElement("a");
     link.href = blobUrl;
@@ -1629,7 +1729,6 @@ window.handlePhotoUpload = (event, inputElement) => {
     link.click();
     document.body.removeChild(link);
 
-    // On passe maintenant la Numérotation (currentCountPadded) à l'enregistrement
     enregistrerObservation(0, filename, prefix, currentCountPadded); 
 
     event.target.value = '';
