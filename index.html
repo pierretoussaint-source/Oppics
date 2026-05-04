@@ -1579,23 +1579,48 @@ window.handlePhotoUpload = (event, inputElement) => {
 
     const prefix = prefixInput.value || "PH";
     
+    // --- NOUVELLE LOGIQUE DE COMPTEUR INVISIBLE ---
+    let dateStr = document.getElementById('custom-date').value || new Date().toISOString().split('T')[0];
+    
+    // Récupération des compteurs sauvegardés, ou initialisation si vide
+    let countersStorage = JSON.parse(localStorage.getItem('oppics_photo_counters') || '{"date":"", "prefixes":{}}');
+    
+    // Si la date a changé, on réinitialise l'objet des compteurs
+    if (countersStorage.date !== dateStr) {
+        countersStorage = { date: dateStr, prefixes: {} };
+    }
+
+    // Si ce préfixe n'a pas encore de compteur pour aujourd'hui, on l'initialise à 0
+    if (!countersStorage.prefixes[prefix]) {
+        countersStorage.prefixes[prefix] = 0;
+    }
+    
+    // On incrémente le compteur pour ce préfixe précis
+    countersStorage.prefixes[prefix]++;
+    
+    // On sauvegarde la nouvelle valeur
+    localStorage.setItem('oppics_photo_counters', JSON.stringify(countersStorage));
+
+    // Formatage avec 4 zéros (ex: 0001, 0002, 0015...)
+    let currentCountPadded = String(countersStorage.prefixes[prefix]).padStart(4, '0');
+    // ----------------------------------------------
+    
     let currentPlot = varieteData.find(p => String(p.Code_Essai_Parcelle).padStart(currentDigitCount,'0') === parcelleValideeCode && p.Essai === currentEssai);
     
     let pVar = currentPlot ? currentPlot.variete : "Inconnue";
     let px = (currentPlot && currentPlot.Plan_X) ? currentPlot.Plan_X : "X";
     let py = (currentPlot && currentPlot.Plan_Y) ? currentPlot.Plan_Y : "Y";
     
-    let dateStr = document.getElementById('custom-date').value; 
     let annee = dateStr ? dateStr.split('-')[0] : new Date().getFullYear();
 
     const sanitizeVar = (s) => String(s).replace(/[^a-zA-Z0-9\s-_]/g, '');
     const sanitizeName = (s) => String(s).replace(/[^a-zA-Z0-9-_]/g, '');
 
-    // Format demandé : LIGNEE.PREFIXE.ESSAI.ANNEE.(X,Y).jpg (SANS numéro .001)
+    // Format demandé avec le compteur à la fin : LIGNEE.PREFIXE.ESSAI.ANNEE.(X,Y).0001.jpg
     const baseName = `${sanitizeVar(pVar)}.${prefix}.${sanitizeName(currentEssai)}.${annee}.(${px},${py})`;
-    const filename = `${baseName}.jpg`;
+    const filename = `${baseName}.${currentCountPadded}.jpg`;
 
-    // Déclenchement du téléchargement manuel (retour à l'ancienne méthode)
+    // Déclenchement du téléchargement manuel
     const blobUrl = URL.createObjectURL(file);
     const link = document.createElement("a");
     link.href = blobUrl;
@@ -1604,14 +1629,14 @@ window.handlePhotoUpload = (event, inputElement) => {
     link.click();
     document.body.removeChild(link);
 
-    // On passe un Numération vide ""
-    enregistrerObservation(0, filename, prefix, ""); 
+    // On passe maintenant la Numérotation (currentCountPadded) à l'enregistrement
+    enregistrerObservation(0, filename, prefix, currentCountPadded); 
 
     event.target.value = '';
     
     const btn = moduleContainer.querySelector('.photo-module-btn');
     const originalText = btn.innerHTML;
-    btn.innerHTML = "✅ PHOTO ENREGISTRÉE !";
+    btn.innerHTML = `✅ PHOTO ${currentCountPadded} ENREGISTRÉE !`;
     btn.style.backgroundColor = "#27ae60";
     setTimeout(() => {
         btn.innerHTML = originalText;
